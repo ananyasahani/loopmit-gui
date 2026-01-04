@@ -68,7 +68,7 @@ export function ControlBoard() {
 
           {!isConnected ? (
             <div className="text-center py-8 text-muted-foreground">
-              Connect to ESP8266 to control relays
+              Connect to ESP32 to control relays
             </div>
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-4 gap-4">

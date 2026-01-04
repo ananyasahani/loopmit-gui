@@ -72,7 +72,7 @@ export function IMUCalibration() {
       </div>
       {!isConnected && (
         <div className="mt-4 p-3 bg-muted/50 rounded text-center text-xs text-muted-foreground">
-          Connect to ESP8266 to see calibration status
+          Connect to ESP32 to see calibration status
         </div>
       )}
     </div>

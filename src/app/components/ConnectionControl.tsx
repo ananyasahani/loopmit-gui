@@ -15,7 +15,7 @@ export function ConnectionControl() {
             <WifiOff className="size-6 text-muted-foreground" />
           )}
           <div>
-            <h3 className="text-foreground">ESP8266 Connection</h3>
+            <h3 className="text-foreground">ESP32 Connection</h3>
             <p className="text-sm text-muted-foreground">
               {isConnected ? 'Connected via Serial' : 'Not connected'}
             </p>
@@ -53,7 +53,7 @@ export function ConnectionControl() {
       {!isConnected && !error && (
         <div className="p-3 bg-muted/50 rounded-lg">
           <p className="text-xs text-muted-foreground">
-            Click "Connect" to select your ESP8266 serial port. Make sure the device is plugged in via USB.
+            Click "Connect" to select your ESP32 serial port. Make sure the device is plugged in via USB.
           </p>
         </div>
       )}
