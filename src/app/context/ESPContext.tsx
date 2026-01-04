@@ -64,6 +64,13 @@ interface HistoryPoint {
   value: number;
 }
 
+interface ErrorLogEntry {
+  id: string;
+  timestamp: number;
+  message: string;
+  type: 'error' | 'warning' | 'info';
+}
+
 // ============================================================================
 // 2. SERIAL PORT MANAGER
 // ============================================================================
@@ -73,24 +80,43 @@ class SerialPortManager {
   private reader: ReadableStreamDefaultReader | null = null;
   private writer: WritableStreamDefaultWriter | null = null;
   private onDataReceived: ((data: string) => void) | null = null;
+  private onError: ((error: string) => void) | null = null;
+
+  setErrorCallback(callback: (error: string) => void): void {
+    this.onError = callback;
+  }
+
+  private logError(message: string): void {
+    if (this.onError) {
+      this.onError(message);
+    }
+  }
 
   async connect(baudRate: number = 115200): Promise<void> {
     if (!('serial' in navigator)) {
-      throw new Error('Web Serial API not supported in this browser');
+      const errorMsg = 'Web Serial API not supported in this browser';
+      this.logError(errorMsg);
+      throw new Error(errorMsg);
     }
 
-    this.port = await (navigator as any).serial.requestPort();
-    await this.port.open({ baudRate });
+    try {
+      this.port = await (navigator as any).serial.requestPort();
+      await this.port.open({ baudRate });
 
-    const textDecoder = new TextDecoderStream();
-    this.port.readable.pipeTo(textDecoder.writable);
-    this.reader = textDecoder.readable.getReader();
+      const textDecoder = new TextDecoderStream();
+      this.port.readable.pipeTo(textDecoder.writable);
+      this.reader = textDecoder.readable.getReader();
 
-    const textEncoder = new TextEncoderStream();
-    textEncoder.readable.pipeTo(this.port.writable);
-    this.writer = textEncoder.writable.getWriter();
+      const textEncoder = new TextEncoderStream();
+      textEncoder.readable.pipeTo(this.port.writable);
+      this.writer = textEncoder.writable.getWriter();
 
-    this.startReading();
+      this.startReading();
+    } catch (error) {
+      const errorMessage = error instanceof Error ? error.message : String(error);
+      this.logError(`Connection error: ${errorMessage}`);
+      throw error; // Re-throw so caller knows connection failed
+    }
   }
 
   async disconnect(): Promise<void> {
@@ -109,11 +135,17 @@ class SerialPortManager {
   }
 
   async send(command: string): Promise<void> {
-    if (!this.writer) {
-      throw new Error('Not connected to serial port');
+    try {
+      if (!this.writer) {
+        this.logError('Cannot send command: Not connected to serial port');
+        return;
+      }
+      await this.writer.write(command + '\n');
+      console.log('Sent:', command);
+    } catch (error) {
+      const errorMessage = error instanceof Error ? error.message : String(error);
+      this.logError(`Send command error: ${errorMessage}`);
     }
-    await this.writer.write(command + '\n');
-    console.log('Sent:', command);
   }
 
   onData(callback: (data: string) => void): void {
@@ -143,7 +175,8 @@ class SerialPortManager {
         }
       }
     } catch (error) {
-      console.error('Reading error:', error);
+      const errorMessage = error instanceof Error ? error.message : String(error);
+      this.logError(`Serial reading error: ${errorMessage}`);
     }
   }
 
@@ -157,13 +190,26 @@ class SerialPortManager {
 // ============================================================================
 
 class DataParser {
+  private onError: ((error: string) => void) | null = null;
+
+  setErrorCallback(callback: (error: string) => void): void {
+    this.onError = callback;
+  }
+
+  private logError(message: string): void {
+    if (this.onError) {
+      this.onError(message);
+    }
+  }
+
   parseJSON(line: string): any | null {
     if (!line.startsWith('{')) return null;
     
     try {
       return JSON.parse(line);
     } catch (error) {
-      console.error('JSON parse error:', error);
+      const errorMessage = error instanceof Error ? error.message : String(error);
+      this.logError(`JSON parse error: ${errorMessage} - Line: ${line.substring(0, 100)}`);
       return null;
     }
   }
@@ -186,72 +232,78 @@ class DataParser {
   }
 
   extractSensorData(rawData: any): Partial<SensorData> {
-    const result: Partial<SensorData> = {};
+    try {
+      const result: Partial<SensorData> = {};
 
-    if (rawData.gap_height !== undefined) {
-      result.gapHeight = rawData.gap_height;
-    }
-
-    if (rawData.object_temp !== undefined) {
-      result.objectTemp = rawData.object_temp;
-    }
-
-    // Extract multiple temperature sensors
-    // Support array format: temp_sensors: [t1, t2, t3, t4]
-    if (Array.isArray(rawData.temp_sensors) && rawData.temp_sensors.length >= 4) {
-      result.temperatures = rawData.temp_sensors.slice(0, 4);
-      // Also set objectTemp to first sensor for backward compatibility
-      if (!result.objectTemp) {
-        result.objectTemp = rawData.temp_sensors[0];
+      if (rawData.gap_height !== undefined) {
+        result.gapHeight = rawData.gap_height;
       }
-    }
-    // Support individual fields: temp1, temp2, temp3, temp4
-    else if (rawData.temp1 !== undefined || rawData.temp2 !== undefined || 
-             rawData.temp3 !== undefined || rawData.temp4 !== undefined) {
-      result.temperatures = [
-        rawData.temp1 ?? 0,
-        rawData.temp2 ?? 0,
-        rawData.temp3 ?? 0,
-        rawData.temp4 ?? 0,
-      ];
-      if (!result.objectTemp && rawData.temp1 !== undefined) {
-        result.objectTemp = rawData.temp1;
+
+      if (rawData.object_temp !== undefined) {
+        result.objectTemp = rawData.object_temp;
       }
-    }
-    // Fallback to single object_temp if available
-    else if (rawData.object_temp !== undefined) {
-      result.temperatures = [rawData.object_temp, 0, 0, 0];
-    }
 
-    if (rawData.voltage !== undefined) {
-      result.voltage = rawData.voltage;
-    }
+      // Extract multiple temperature sensors
+      // Support array format: temp_sensors: [t1, t2, t3, t4]
+      if (Array.isArray(rawData.temp_sensors) && rawData.temp_sensors.length >= 4) {
+        result.temperatures = rawData.temp_sensors.slice(0, 4);
+        // Also set objectTemp to first sensor for backward compatibility
+        if (!result.objectTemp) {
+          result.objectTemp = rawData.temp_sensors[0];
+        }
+      }
+      // Support individual fields: temp1, temp2, temp3, temp4
+      else if (rawData.temp1 !== undefined || rawData.temp2 !== undefined || 
+               rawData.temp3 !== undefined || rawData.temp4 !== undefined) {
+        result.temperatures = [
+          rawData.temp1 ?? 0,
+          rawData.temp2 ?? 0,
+          rawData.temp3 ?? 0,
+          rawData.temp4 ?? 0,
+        ];
+        if (!result.objectTemp && rawData.temp1 !== undefined) {
+          result.objectTemp = rawData.temp1;
+        }
+      }
+      // Fallback to single object_temp if available
+      else if (rawData.object_temp !== undefined) {
+        result.temperatures = [rawData.object_temp, 0, 0, 0];
+      }
 
-    if (Array.isArray(rawData.orientation) && rawData.orientation.length >= 3) {
-      result.orientation = {
-        x: rawData.orientation[0],
-        y: rawData.orientation[1],
-        z: rawData.orientation[2],
-      };
-    }
+      if (rawData.voltage !== undefined) {
+        result.voltage = rawData.voltage;
+      }
 
-    if (Array.isArray(rawData.acceleration) && rawData.acceleration.length >= 3) {
-      const [x, y, z] = rawData.acceleration;
-      result.acceleration = {
-        x, y, z,
-        magnitude: Math.sqrt(x * x + y * y + z * z),
-      };
-    }
+      if (Array.isArray(rawData.orientation) && rawData.orientation.length >= 3) {
+        result.orientation = {
+          x: rawData.orientation[0],
+          y: rawData.orientation[1],
+          z: rawData.orientation[2],
+        };
+      }
 
-    if (Array.isArray(rawData.calibration) && rawData.calibration.length >= 3) {
-      result.calibration = {
-        gyro: rawData.calibration[0],
-        sys: rawData.calibration[1],
-        magneto: rawData.calibration[2],
-      };
-    }
+      if (Array.isArray(rawData.acceleration) && rawData.acceleration.length >= 3) {
+        const [x, y, z] = rawData.acceleration;
+        result.acceleration = {
+          x, y, z,
+          magnitude: Math.sqrt(x * x + y * y + z * z),
+        };
+      }
 
-    return result;
+      if (Array.isArray(rawData.calibration) && rawData.calibration.length >= 3) {
+        result.calibration = {
+          gyro: rawData.calibration[0],
+          sys: rawData.calibration[1],
+          magneto: rawData.calibration[2],
+        };
+      }
+
+      return result;
+    } catch (error) {
+      const errorMessage = error instanceof Error ? error.message : String(error);
+      this.logError(`Sensor data extraction error: ${errorMessage}`);
+      return {};
+    }
   }
 }
 
@@ -315,6 +367,7 @@ interface ESPContextType {
   isConnected: boolean;
   isConnecting: boolean;
   error: string;
+  errorLog: ErrorLogEntry[];
   connect: () => Promise<void>;
   disconnect: () => Promise<void>;
   
@@ -330,6 +383,7 @@ interface ESPContextType {
   gapHeightHistory: HistoryPoint[];
   voltageHistory: HistoryPoint[];
   clearHistory: () => void;
+  clearErrorLog: () => void;
 }
 
 const ESPContext = createContext<ESPContextType | undefined>(undefined);
@@ -353,6 +407,27 @@ export const ESPProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   const [isConnected, setIsConnected] = useState(false);
   const [isConnecting, setIsConnecting] = useState(false);
   const [error, setError] = useState('');
+  const [errorLog, setErrorLog] = useState<ErrorLogEntry[]>([]);
+
+  // Set up error callbacks
+  const addError = useCallback((message: string, type: 'error' | 'warning' | 'info' = 'error') => {
+    const entry: ErrorLogEntry = {
+      id: `${Date.now()}-${Math.random()}`,
+      timestamp: Date.now(),
+      message,
+      type,
+    };
+    setErrorLog(prev => {
+      const updated = [...prev, entry];
+      // Keep only last 1000 entries
+      return updated.slice(-1000);
+    });
+  }, []);
+
+  useEffect(() => {
+    serialManager.setErrorCallback(addError);
+    dataParser.setErrorCallback(addError);
+  }, [serialManager, dataParser, addError]);
 
   const [sensorData, setSensorData] = useState<SensorData>({
     gapHeight: 0,
@@ -379,57 +454,68 @@ export const ESPProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   const [voltageHistory, setVoltageHistory] = useState<HistoryPoint[]>([]);
 
   const handleIncomingData = useCallback((line: string) => {
-    const jsonData = dataParser.parseJSON(line);
-    if (jsonData) {
-      const extracted = dataParser.extractSensorData(jsonData);
-      
-      setSensorData(prev => ({ ...prev, ...extracted }));
+    try {
+      const jsonData = dataParser.parseJSON(line);
+      if (jsonData) {
+        const extracted = dataParser.extractSensorData(jsonData);
+        
+        setSensorData(prev => ({ ...prev, ...extracted }));
 
-      // Update temperature histories for multiple sensors
-      if (extracted.temperatures && Array.isArray(extracted.temperatures)) {
-        setTemperatureHistories(prev => 
-          prev.map((history, index) => 
-            extracted.temperatures![index] !== undefined
-              ? historyManager.addPoint(history, extracted.temperatures![index])
-              : history
-          )
-        );
-        // Also update single history for backward compatibility (use first sensor)
-        if (extracted.temperatures[0] !== undefined) {
+        // Update temperature histories for multiple sensors
+        if (extracted.temperatures && Array.isArray(extracted.temperatures)) {
+          setTemperatureHistories(prev => 
+            prev.map((history, index) => 
+              extracted.temperatures![index] !== undefined
+                ? historyManager.addPoint(history, extracted.temperatures![index])
+                : history
+            )
+          );
+          // Also update single history for backward compatibility (use first sensor)
+          if (extracted.temperatures[0] !== undefined) {
+            setTemperatureHistory(prev => 
+              historyManager.addPoint(prev, extracted.temperatures![0])
+            );
+          }
+        } else if (extracted.objectTemp !== undefined) {
+          // Fallback: if only objectTemp is provided, update first sensor
           setTemperatureHistory(prev => 
-            historyManager.addPoint(prev, extracted.temperatures![0])
+            historyManager.addPoint(prev, extracted.objectTemp!)
+          );
+          setTemperatureHistories(prev => {
+            const newHistories = [...prev];
+            newHistories[0] = historyManager.addPoint(newHistories[0], extracted.objectTemp!);
+            return newHistories;
+          });
+        }
+        if (extracted.gapHeight !== undefined) {
+          setGapHeightHistory(prev => 
+            historyManager.addPoint(prev, extracted.gapHeight!)
           );
         }
-      } else if (extracted.objectTemp !== undefined) {
-        // Fallback: if only objectTemp is provided, update first sensor
-        setTemperatureHistory(prev => 
-          historyManager.addPoint(prev, extracted.objectTemp!)
-        );
-        setTemperatureHistories(prev => {
-          const newHistories = [...prev];
-          newHistories[0] = historyManager.addPoint(newHistories[0], extracted.objectTemp!);
-          return newHistories;
-        });
-      }
-      if (extracted.gapHeight !== undefined) {
-        setGapHeightHistory(prev => 
-          historyManager.addPoint(prev, extracted.gapHeight!)
-        );
-      }
-      if (extracted.voltage !== undefined) {
-        setVoltageHistory(prev => 
-          historyManager.addPoint(prev, extracted.voltage!)
-        );
+        if (extracted.voltage !== undefined) {
+          setVoltageHistory(prev => 
+            historyManager.addPoint(prev, extracted.voltage!)
+          );
+        }
+
+        if (jsonData.relayStates) {
+          setRelayStates(jsonData.relayStates);
+        }
       }
 
-      if (jsonData.relayStates) {
-        setRelayStates(jsonData.relayStates);
+      const relayState = dataParser.parseRelayState(line);
+      if (relayState) {
+        setRelayStates(relayState);
       }
-    }
-
-    const relayState = dataParser.parseRelayState(line);
-    if (relayState) {
-      setRelayStates(relayState);
+    } catch (error) {
+      const errorMessage = error instanceof Error ? error.message : String(error);
+      const entry: ErrorLogEntry = {
+        id: `${Date.now()}-${Math.random()}`,
+        timestamp: Date.now(),
+        message: `Data handling error: ${errorMessage}`,
+        type: 'error',
+      };
+      setErrorLog(prev => [...prev, entry].slice(-1000));
     }
   }, [dataParser, historyManager]);
 
@@ -443,10 +529,29 @@ export const ESPProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       setError('');
       await serialManager.connect(115200);
       setIsConnected(true);
-      await relayController.getStatus();
+      try {
+        await relayController.getStatus();
+      } catch (err) {
+        const errorMessage = err instanceof Error ? err.message : String(err);
+        const entry: ErrorLogEntry = {
+          id: `${Date.now()}-${Math.random()}`,
+          timestamp: Date.now(),
+          message: `Failed to get relay status: ${errorMessage}`,
+          type: 'warning',
+        };
+        setErrorLog(prev => [...prev, entry].slice(-1000));
+      }
     } catch (err) {
-      setError(`Connection failed: ${err}`);
+      const errorMessage = err instanceof Error ? err.message : String(err);
+      setError(`Connection failed: ${errorMessage}`);
       setIsConnected(false);
+      const entry: ErrorLogEntry = {
+        id: `${Date.now()}-${Math.random()}`,
+        timestamp: Date.now(),
+        message: `Connection failed: ${errorMessage}`,
+        type: 'error',
+      };
+      setErrorLog(prev => [...prev, entry].slice(-1000));
     } finally {
       setIsConnecting(false);
     }
@@ -457,24 +562,65 @@ export const ESPProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       await serialManager.disconnect();
       setIsConnected(false);
     } catch (err) {
-      setError(`Disconnect failed: ${err}`);
+      const errorMessage = err instanceof Error ? err.message : String(err);
+      setError(`Disconnect failed: ${errorMessage}`);
+      const entry: ErrorLogEntry = {
+        id: `${Date.now()}-${Math.random()}`,
+        timestamp: Date.now(),
+        message: `Disconnect failed: ${errorMessage}`,
+        type: 'error',
+      };
+      setErrorLog(prev => [...prev, entry].slice(-1000));
     }
   };
 
   const toggleRelay = async (num: 1 | 2 | 3 | 4) => {
-    const key = `relay${num}` as keyof RelayState;
-    const newState = await relayController.toggle(num, relayStates[key]);
-    setRelayStates(prev => ({ ...prev, [key]: newState }));
+    try {
+      const key = `relay${num}` as keyof RelayState;
+      const newState = await relayController.toggle(num, relayStates[key]);
+      setRelayStates(prev => ({ ...prev, [key]: newState }));
+    } catch (err) {
+      const errorMessage = err instanceof Error ? err.message : String(err);
+      const entry: ErrorLogEntry = {
+        id: `${Date.now()}-${Math.random()}`,
+        timestamp: Date.now(),
+        message: `Failed to toggle relay ${num}: ${errorMessage}`,
+        type: 'error',
+      };
+      setErrorLog(prev => [...prev, entry].slice(-1000));
+    }
   };
 
   const turnAllOn = async () => {
-    await relayController.turnAllOn();
-    setRelayStates({ relay1: true, relay2: true, relay3: true, relay4: true });
+    try {
+      await relayController.turnAllOn();
+      setRelayStates({ relay1: true, relay2: true, relay3: true, relay4: true });
+    } catch (err) {
+      const errorMessage = err instanceof Error ? err.message : String(err);
+      const entry: ErrorLogEntry = {
+        id: `${Date.now()}-${Math.random()}`,
+        timestamp: Date.now(),
+        message: `Failed to turn all relays on: ${errorMessage}`,
+        type: 'error',
+      };
+      setErrorLog(prev => [...prev, entry].slice(-1000));
+    }
   };
 
   const turnAllOff = async () => {
-    await relayController.turnAllOff();
-    setRelayStates({ relay1: false, relay2: false, relay3: false, relay4: false });
+    try {
+      await relayController.turnAllOff();
+      setRelayStates({ relay1: false, relay2: false, relay3: false, relay4: false });
+    } catch (err) {
+      const errorMessage = err instanceof Error ? err.message : String(err);
+      const entry: ErrorLogEntry = {
+        id: `${Date.now()}-${Math.random()}`,
+        timestamp: Date.now(),
+        message: `Failed to turn all relays off: ${errorMessage}`,
+        type: 'error',
+      };
+      setErrorLog(prev => [...prev, entry].slice(-1000));
+    }
   };
 
   const clearHistory = () => {
@@ -484,10 +630,15 @@ export const ESPProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     setVoltageHistory(historyManager.clear());
   };
 
+  const clearErrorLog = () => {
+    setErrorLog([]);
+  };
+
   const value: ESPContextType = {
     isConnected,
     isConnecting,
     error,
+    errorLog,
     connect,
     disconnect,
     sensorData,
@@ -500,6 +651,7 @@ export const ESPProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     gapHeightHistory,
     voltageHistory,
     clearHistory,
+    clearErrorLog,
   };
 
   return <ESPContext.Provider value={value}>{children}</ESPContext.Provider>;

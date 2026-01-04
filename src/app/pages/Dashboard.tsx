@@ -5,6 +5,7 @@ import { ConnectionControl } from '../components/ConnectionControl';
 import { useESP } from '../context/ESPContext';
 import React from 'react';
 import { StopBtn } from '../components/stopbtn';
+import { Error_log } from '../components/error_log';
 export function Dashboard() {
   const { isConnected } = useESP();
 
@@ -20,7 +21,7 @@ export function Dashboard() {
 
         <ConnectionControl />
         <StopBtn />
-
+        <Error_log />
         <SensorMetrics />
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
