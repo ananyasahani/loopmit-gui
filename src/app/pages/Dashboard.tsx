@@ -4,7 +4,7 @@ import { IMUCalibration } from '../components/IMUCalibration';
 import { ConnectionControl } from '../components/ConnectionControl';
 import { useESP } from '../context/ESPContext';
 import React from 'react';
-
+import { StopBtn } from '../components/stopbtn';
 export function Dashboard() {
   const { isConnected } = useESP();
 
@@ -19,6 +19,7 @@ export function Dashboard() {
         </div>
 
         <ConnectionControl />
+        <StopBtn />
 
         <SensorMetrics />
 
