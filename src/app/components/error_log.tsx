@@ -8,7 +8,7 @@ export const Error_log = () => {
   const { errorLog, clearErrorLog } = useESP();
   const [isOpen, setIsOpen] = useState(false);
 
-  const formatTime = (timestamp: number) => {
+  const formatTime = (timestamp: number) =>{
     const date = new Date(timestamp);
     return date.toLocaleTimeString();
   };
