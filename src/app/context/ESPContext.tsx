@@ -135,16 +135,19 @@ class SerialPortManager {
   }
 
   async send(command: string): Promise<void> {
+    if (!this.writer) {
+      const error = 'Cannot send command: Not connected to serial port';
+      this.logError(error);
+      throw new Error(error);  // ✅ Throw instead of return
+    }
+  
     try {
-      if (!this.writer) {
-        this.logError('Cannot send command: Not connected to serial port');
-        return;
-      }
       await this.writer.write(command + '\n');
       console.log('Sent:', command);
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : String(error);
       this.logError(`Send command error: ${errorMessage}`);
+      throw error;  // ✅ Re-throw to propagate the error
     }
   }
 
