@@ -7,6 +7,8 @@ import React from 'react';
 import { StopBtn } from '../components/stopbtn';
 import { Error_log } from '../components/error_log';
 import  Pod from '../components/pod';
+import DataStream from '../components/datastream';
+import Pod2 from '../components/pod2';
 export function Dashboard() {
   const { isConnected } = useESP();
 
@@ -28,8 +30,8 @@ export function Dashboard() {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           <TemperatureChart />
           <IMUCalibration />
-          <Pod />
         </div>
+        <Pod2/>
 
         <div className="bg-card border border-border rounded-lg p-6">
           <h3 className="mb-4 text-foreground">System Status</h3>
