@@ -34,6 +34,13 @@ export function SensorMetrics() {
       color: 'text-purple-500',
       bgColor: 'bg-purple-500/10',
     },
+    {
+      label: 'bno_health',
+      value: `${sensorData.bno_health.toFixed(1)}mm`,
+      icon: <Gauge className="size-6" />,
+      color: 'text-red-500',
+      bgColor: 'bg-green-500/10',
+    },
   ];
 
   return (

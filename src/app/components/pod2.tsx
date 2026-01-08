@@ -125,13 +125,13 @@ function SensorNode({ position, isActive, data, label, description, onHover, sho
     </group>
   );
 }
-function STLModel({ url, scale, istransparent}) {
+function STLModel({ url, scale,}) {
   const geom = useLoader(STLLoader, url);
   
   return (
     <mesh position={[-5.8, 0, 1.5]} rotation={[-1.6, 0, 0]} scale={scale}>
       <primitive object={geom} attach="geometry" />
-      <meshStandardMaterial color="#94a3b8" metalness={0.6} roughness={0.4} transparent={true} />
+      <meshStandardMaterial color="0xFFFFFF" metalness={0.6} roughness={0.4} wireframe={true}/>
     </mesh>
   );
 }
@@ -141,28 +141,34 @@ function Lights() {
     <>
       <spotLight
         position={[0, 5, 5]}
-        intensity={3}
+        intensity={10}
         angle={0.4}
         penumbra={0.5}
         castShadow
       />
-      <pointLight position={[-3, 2, -3]} intensity={1} color="#4488ff" />
+      <pointLight position={[-3, 2, -3]} intensity={50} color="0xFFFFFF" />
       <ambientLight intensity={0.3} />
     </>
   );
 }
 
-function Scene({ sensorData, onSensorHover ,ispanelopen}) {
+function Scene({ sensorData, onSensorHover}) {
   const hasTemperatureData = sensorData.temperatures && sensorData.temperatures.length > 0;
   const hasGapHeight = sensorData.gapHeight > 0;
   const hasVoltage = sensorData.voltage > 0;
   const hasIMU = sensorData.orientation && (sensorData.orientation.x !== 0 || sensorData.orientation.y !== 0 || sensorData.orientation.z !== 0);
+  const [iscontrols,setControls]=useState(true);
+  const controls=useControls({
+    posx:{value: 1, min: 0, max: 5, step: 0.1},
+    posy:{value: 1, min: 0, max: 5, step: 0.1},
+    posz:{value: 1, min: 0, max: 5, step: 0.1},
 
+  })
   return (
     <>
-      
+    <button onClick={()=>setControls(!iscontrols)}></button>
       <SensorNode
-        position={SENSOR_POSITIONS.temperature}
+        position={ iscontrols?[controls.posx,controls.posy,controls.posz]:SENSOR_POSITIONS.temperature}
         isActive={hasTemperatureData}
         label={SENSOR_POSITIONS.temperature.label}
         description="Monitors thermal conditions across 4 sensor points"

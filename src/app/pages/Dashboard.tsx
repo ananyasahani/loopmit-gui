@@ -31,7 +31,6 @@ export function Dashboard() {
           <TemperatureChart />
           <IMUCalibration />
         </div>
-        <Pod2/>
 
         <div className="bg-card border border-border rounded-lg p-6">
           <h3 className="mb-4 text-foreground">System Status</h3>

@@ -50,6 +50,8 @@ interface SensorData {
   orientation: { x: number; y: number; z: number };
   acceleration: { x: number; y: number; z: number; magnitude: number };
   calibration: { gyro: number; sys: number; magneto: number };
+  bno_health: number;
+  icg_health: number;
 }
 
 interface RelayState {
@@ -240,6 +242,12 @@ class DataParser {
 
       if (rawData.gap_height !== undefined) {
         result.gapHeight = rawData.gap_height;
+      }
+      if (rawData.bno_health !== undefined) {
+        result.bno_health = rawData.bno_health;
+      }
+      if (rawData.icg_health !== undefined) {
+        result.icg_health = rawData.icg_health;
       }
 
       if (rawData.object_temp !== undefined) {
@@ -440,6 +448,8 @@ export const ESPProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     orientation: { x: 0, y: 0, z: 0 },
     acceleration: { x: 0, y: 0, z: 0, magnitude: 0 },
     calibration: { gyro: 0, sys: 0, magneto: 0 },
+    bno_health:0,
+    icg_health:0,
   });
 
   const [relayStates, setRelayStates] = useState<RelayState>({
@@ -659,3 +669,4 @@ export const ESPProvider: React.FC<{ children: React.ReactNode }> = ({ children 
 
   return <ESPContext.Provider value={value}>{children}</ESPContext.Provider>;
 };
+
