@@ -52,6 +52,10 @@ interface SensorData {
   calibration: { gyro: number; sys: number; magneto: number };
   bno_health: number;
   icg_health: number;
+  voltage_health:number;
+  temp_health:number;
+  lidar_health:number;
+
 }
 
 interface RelayState {
@@ -242,6 +246,15 @@ class DataParser {
 
       if (rawData.gap_height !== undefined) {
         result.gapHeight = rawData.gap_height;
+      }
+      if (rawData.voltage_health !== undefined) {
+        result.voltage_health = rawData.voltage_health;
+      }
+      if (rawData.temp_health !== undefined) {
+        result.temp_health = rawData.temp_health;
+      }
+      if (rawData.lidar_health !== undefined) {
+        result.lidar_health = rawData.lidar_health;
       }
       if (rawData.bno_health !== undefined) {
         result.bno_health = rawData.bno_health;
@@ -450,6 +463,11 @@ export const ESPProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     calibration: { gyro: 0, sys: 0, magneto: 0 },
     bno_health:0,
     icg_health:0,
+    voltage_health:0,
+    temp_health:0,
+    lidar_health:0,
+  
+
   });
 
   const [relayStates, setRelayStates] = useState<RelayState>({
