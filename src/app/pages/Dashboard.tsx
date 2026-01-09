@@ -8,7 +8,6 @@ import { StopBtn } from '../components/stopbtn';
 import { Error_log } from '../components/error_log';
 import  Pod from '../components/pod';
 import DataStream from '../components/datastream';
-import Pod2 from '../components/pod2';
 export function Dashboard() {
   const { isConnected } = useESP();
 
