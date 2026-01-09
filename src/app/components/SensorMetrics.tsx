@@ -36,9 +36,30 @@ export function SensorMetrics() {
     },
     {
       label: 'bno_health',
-      value: `${sensorData.bno_health.toFixed(1)}mm`,
+      value: `${sensorData.bno_health.toFixed(1)}`,
       icon: <Gauge className="size-6" />,
       color: 'text-red-500',
+      bgColor: 'bg-green-500/10',
+    },
+    {
+      label: 'voltage_health',
+      value: `${sensorData.voltage_health.toFixed(1)}`,
+      icon: <Gauge className="size-6" />,
+      color: 'text-blue-500',
+      bgColor: 'bg-green-500/10',
+    },
+    {
+      label: 'temp_health',
+      value: `${sensorData.temp_health.toFixed(1)}`,
+      icon: <Gauge className="size-6" />,
+      color: 'text-purple-500',
+      bgColor: 'bg-green-500/10',
+    },
+    {
+      label: 'lidar_health',
+      value: `${sensorData.lidar_health.toFixed(1)}`,
+      icon: <Gauge className="size-6" />,
+      color: 'text-yellow-500',
       bgColor: 'bg-green-500/10',
     },
   ];
