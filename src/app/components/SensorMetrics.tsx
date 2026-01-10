@@ -22,7 +22,7 @@ export function SensorMetrics() {
     },
     {
       label: 'Acceleration',
-      value: `${sensorData.acceleration.magnitude.toFixed(2)}m/s²`,
+      value: `${sensorData.acceleration.x.toFixed(0)}m/s²`,
       icon: <Move className="size-6" />,
       color: 'text-yellow-500',
       bgColor: 'bg-yellow-500/10',
