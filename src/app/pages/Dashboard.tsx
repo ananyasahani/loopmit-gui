@@ -47,7 +47,6 @@ export function Dashboard() {
         <StopBtn />
         <Error_log />
         <SensorMetrics />
-        <Pod2/>
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           <TemperatureChart />
           <IMUCalibration />
