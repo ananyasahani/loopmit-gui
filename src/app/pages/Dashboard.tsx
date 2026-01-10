@@ -6,27 +6,48 @@ import { useESP } from '../context/ESPContext';
 import React from 'react';
 import { StopBtn } from '../components/stopbtn';
 import { Error_log } from '../components/error_log';
-import  Pod from '../components/pod';
-import DataStream from '../components/datastream';
+import Pod from '../components/pod';
 import Pod2 from '../components/pod2';
+import { useClerk } from '@clerk/clerk-react';
+import { Button } from '../components/ui/button';
+import { LogOut } from 'lucide-react';
+
 export function Dashboard() {
   const { isConnected } = useESP();
+  const { signOut } = useClerk();
+
+  const handleLogout = async () => {
+    await signOut();
+  };
 
   return (
     <div className="min-h-screen bg-background p-8 pb-32">
       <div className="max-w-7xl mx-auto space-y-8">
-        <div>
-          <h1 className="text-foreground mb-2">loopMIT Control Center</h1>
-          <p className="text-muted-foreground">
-            Real-time sensor telemetry and system monitoring for hyperloop pod prototype
-          </p>
+        <div className="flex items-start justify-between">
+          <div>
+            <h1 className="text-foreground mb-2">loopMIT Control Center</h1>
+            <p className="text-muted-foreground">
+              Real-time sensor telemetry and system monitoring for hyperloop pod prototype
+            </p>
+          </div>
+          <Button
+            onClick={handleLogout}
+            className="bg-[#39C3EF] hover:bg-[#39C3EF]/90 text-black transition font-medium duration-200 h-10 rounded-lg px-6 flex items-center justify-center gap-2"
+            style={{
+              boxShadow:
+                "0px -1px 0px 0px #ffffff40 inset, 0px 1px 0px 0px #ffffff40 inset",
+            }}
+          >
+            <LogOut className="size-4" />
+            Logout
+          </Button>
         </div>
 
         <ConnectionControl />
         <StopBtn />
         <Error_log />
         <SensorMetrics />
-
+        <Pod2/>
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           <TemperatureChart />
           <IMUCalibration />
