@@ -6,7 +6,7 @@ export function Electrical() {
         <div>
           <h1 className="text-foreground mb-2">Electrical Subsystem</h1>
           <p className="text-muted-foreground">
-            Power distribution, battery management, and electrical control systems
+           
           </p>
         </div>
 

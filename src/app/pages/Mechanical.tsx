@@ -6,7 +6,7 @@ export function Mechanical() {
         <div>
           <h1 className="text-foreground mb-2">Mechanical Subsystem</h1>
           <p className="text-muted-foreground">
-            Structural design, chassis, and mechanical components
+            
           </p>
         </div>
 

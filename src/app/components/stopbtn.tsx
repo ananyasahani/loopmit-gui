@@ -1,26 +1,30 @@
 "use client";
-import { useState } from 'react';
-import { motion } from 'motion/react';
-import { Power, Zap, Radio, Settings } from 'lucide-react';
+import { useEffect } from 'react';
 import { useESP } from '../context/ESPContext';
 import React from 'react';
 
-
-interface RelayConfig {
-  id: 1 | 2 | 3 | 4;
-  name: string;
-  icon: React.ReactNode;
-  description: string;
-}
-
 export function StopBtn() {
   const { turnAllOff } = useESP();
-  return(
+
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.ctrlKey && e.code === 'Space') {
+        e.preventDefault();
+        turnAllOff();
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [turnAllOff]);
+
+  return (
     <button
       onClick={turnAllOff}
-      className="px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition-colors"
+      className="px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition-colors font-medium"
+      title="Emergency Stop (Ctrl+Space)"
     >
-      Stop
+      Emergency Stop
     </button>
-  )
+  );
 }

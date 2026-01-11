@@ -20,7 +20,7 @@ export function SideNavigation() {
       {/* Menu button */}
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="fixed top-4 left-4 z-50 p-2 bg-primary text-primary-foreground rounded-lg hover:opacity-90 transition-opacity"
+        className="fixed top-4 left-4 z-999 p-2 bg-primary text-primary-foreground rounded-lg hover:opacity-90 transition-opacity"
       >
         {isOpen ? <X className="size-6" /> : <Menu className="size-6" />}
       </button>
@@ -41,10 +41,10 @@ export function SideNavigation() {
         initial={{ x: '-100%' }}
         animate={{ x: isOpen ? 0 : '-100%' }}
         transition={{ type: 'spring', damping: 25, stiffness: 300 }}
-        className="fixed left-0 top-0 bottom-0 w-64 bg-card border-r border-border z-40 p-6"
+        className="fixed left-0 top-10 bottom-0 w-64 bg-card border-r border-border z-40 p-6"
       >
         <div className="mt-16">
-          <h2 className="mb-6 text-foreground">loopMIT</h2>
+          <h2 className="mb-6 text-foreground"></h2>
           <div className="space-y-2">
             {navItems.map((item) => {
               const isActive = location.pathname === item.path;

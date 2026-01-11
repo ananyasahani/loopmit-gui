@@ -6,7 +6,7 @@ export function LevitationPropulsion() {
         <div>
           <h1 className="text-foreground mb-2">Levitation & Propulsion Subsystem</h1>
           <p className="text-muted-foreground">
-            Magnetic levitation system and propulsion mechanisms
+           
           </p>
         </div>
 

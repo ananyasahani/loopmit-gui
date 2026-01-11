@@ -1,5 +1,5 @@
 import { Route, Routes } from "react-router-dom";
-import { SideNavigation } from "./app/components/SideNavigation";
+import { Header } from "./app/components/Header";
 import { ESPProvider } from "./app/context/ESPContext";
 import { BrowserRouter } from "react-router-dom";
 import { ControlBoard } from "./app/components/ControlBoard";
@@ -14,8 +14,8 @@ export default function MainPage() {
 <ESPProvider>
       <BrowserRouter>
       
-        <div className="dark min-h-screen bg-background text-foreground">
-          <SideNavigation />
+        <div className="dark h-screen overflow-y-auto bg-background text-foreground">
+          <Header />
           <ControlBoard />
           
           <Routes>
