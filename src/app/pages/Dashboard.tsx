@@ -6,8 +6,10 @@ import { useESP } from '../context/ESPContext';
 import React from 'react';
 import { StopBtn } from '../components/stopbtn';
 import { Error_log } from '../components/error_log';
-import  Pod from '../components/pod';
+import  Pod from '../components/pod2';
 import DataStream from '../components/datastream';
+import { HealthScore } from '../components/health';
+import { ControlBoard } from '../components/ControlBoard';
 export function Dashboard() {
   const { isConnected } = useESP();
 
@@ -24,12 +26,15 @@ export function Dashboard() {
         <ConnectionControl />
         <StopBtn />
         <Error_log />
+        <ControlBoard />
         <SensorMetrics />
+        <HealthScore/>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           <TemperatureChart />
           <IMUCalibration />
         </div>
+        
 
         <div className="bg-card border border-border rounded-lg p-6">
           <h3 className="mb-4 text-foreground">System Status</h3>

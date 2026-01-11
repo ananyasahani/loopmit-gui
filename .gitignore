@@ -1,0 +1,7 @@
+node_modules/
+*.stl
+*.STL
+# Large binary files
+public/**/*.stl
+public/**/*.STL
+next-swc.*.node

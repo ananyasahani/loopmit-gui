@@ -32,13 +32,7 @@ export function ControlBoard() {
       />
 
       {/* Control board panel */}
-      <motion.div
-        className="fixed bottom-0 left-0 right-0 z-50 bg-card border-t border-border"
-        initial={{ y: '100%' }}
-        animate={{ y: isOpen ? 0 : 'calc(100% - 2rem)' }}
-        transition={{ type: 'spring', damping: 25, stiffness: 300 }}
-        onMouseLeave={() => setIsOpen(false)}
-      >
+     <div>
         {/* Handle bar */}
         <div className="h-8 flex items-center justify-center cursor-pointer" onClick={() => setIsOpen(!isOpen)}>
           <div className="w-12 h-1 bg-muted-foreground/30 rounded-full" />
@@ -100,7 +94,7 @@ export function ControlBoard() {
             </div>
           )}
         </div>
-      </motion.div>
+        </div>
     </>
   );
 }

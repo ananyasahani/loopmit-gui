@@ -14,7 +14,7 @@ export default function App() {
       <BrowserRouter>
         <div className="dark min-h-screen bg-background text-foreground">
           <SideNavigation />
-          <ControlBoard />
+          
           <Routes>
             <Route path="/" element={<Dashboard />} />
             <Route path="/electrical" element={<Electrical />} />
