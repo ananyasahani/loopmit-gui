@@ -53,8 +53,15 @@ interface SensorData {
   bno_health: number;
   icg_health: number;
   voltage_health:number;
-  temp_health:number;
+  temp4_health:number;
   lidar_health:number;
+  temp2_health:number;
+  slave4_voltage:number;
+  slave4_voltage_health:number;
+  slave4_pressure:number;
+  slave4_pressure_health:number;
+
+
 
 }
 
@@ -250,9 +257,6 @@ class DataParser {
       if (rawData.voltage_health !== undefined) {
         result.voltage_health = rawData.voltage_health;
       }
-      if (rawData.temp_health !== undefined) {
-        result.temp_health = rawData.temp_health;
-      }
       if (rawData.lidar_health !== undefined) {
         result.lidar_health = rawData.lidar_health;
       }
@@ -261,6 +265,18 @@ class DataParser {
       }
       if (rawData.icg_health !== undefined) {
         result.icg_health = rawData.icg_health;
+      }
+      if (rawData.voltage_health !== undefined) {
+        result.voltage_health = rawData.voltage_health;
+      }
+      if (rawData.slave4_voltage_health !== undefined) {
+        result.slave4_voltage_health = rawData.slave4_voltage_health;
+      }
+      if (rawData.temp2_health !== undefined) {
+        result.temp2_health = rawData.temp2_health;
+      }
+      if (rawData.temp4_health !== undefined) {
+        result.temp4_health = rawData.temp4_health;
       }
 
       if (rawData.object_temp !== undefined) {
@@ -464,8 +480,13 @@ export const ESPProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     bno_health:0,
     icg_health:0,
     voltage_health:0,
-    temp_health:0,
+    temp2_health:0,
     lidar_health:0,
+    temp4_health:0,
+    slave4_voltage:0,
+    slave4_voltage_health:0,
+    slave4_pressure:0,
+    slave4_pressure_health:0,
   
 
   });

@@ -54,7 +54,7 @@ export function HealthScore() {
     },
     {
       label: 'Temperature Health',
-      value: sensorData.temp_health,
+      value: sensorData.temp2_health,
       icon: <Thermometer className="size-5" />,
       description: 'Temperature Sensor Health',
     },
@@ -64,6 +64,25 @@ export function HealthScore() {
       icon: <Radio className="size-5" />,
       description: 'LiDAR Sensor Health',
     },
+    {
+      label: 'Temperature 4 health ',
+      value: sensorData.temp4_health,
+      icon: <Radio className="size-5" />,
+      description: 'LiDAR Sensor Health',
+    },
+    {
+      label: 'pressure health',
+      value: sensorData.slave4_pressure_health,
+      icon: <Radio className="size-5" />,
+      description: 'LiDAR Sensor Health',
+    },
+    {
+      label: 'voltage_health from slave 4',
+      value: sensorData.slave4_voltage_health,
+      icon: <Radio className="size-5" />,
+      description: 'LiDAR Sensor Health',
+    },
+
   ];
 
   return (
