@@ -60,9 +60,13 @@ interface SensorData {
   slave4_voltage_health:number;
   slave4_pressure:number;
   slave4_pressure_health:number;
-
-
-
+  master_voltage:number;
+  master_voltage_health:number;
+  wiring_health:number;
+  heartbeat_health:number;
+  safety_heartbeat_health:number;
+  heartbeat_count:number;
+  last_heartbeat_ms:number;
 }
 
 interface RelayState {
@@ -283,6 +287,22 @@ class DataParser {
         result.objectTemp = rawData.object_temp;
       }
 
+      if (rawData.master_voltage !== undefined) {
+        result.master_voltage = rawData.master_voltage;
+      }if (rawData.master_voltage_health !== undefined) {
+        result.master_voltage_health = rawData.master_voltage_health;
+      }if (rawData.wiring_health !== undefined) {
+        result.wiring_health = rawData.wiring_health;
+      }if (rawData.heartbeat_health !== undefined) {
+        result.heartbeat_health = rawData.heartbeat_health;
+      }if (rawData.safety_heartbeat_health !== undefined) {
+        result.safety_heartbeat_health = rawData.safety_heartbeat_health;
+      }if (rawData.heartbeat_count !== undefined) {
+        result.heartbeat_count = rawData.heartbeat_count;
+      }if (rawData.last_heartbeat_ms !== undefined) {
+        result.last_heartbeat_ms = rawData.last_heartbeat_ms;
+      }
+
       // Extract multiple temperature sensors
       // Support array format: temp_sensors: [t1, t2, t3, t4]
       if (Array.isArray(rawData.temp_sensors) && rawData.temp_sensors.length >= 4) {
@@ -487,9 +507,15 @@ export const ESPProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     slave4_voltage_health:0,
     slave4_pressure:0,
     slave4_pressure_health:0,
-  
+    master_voltage:0,
+    master_voltage_health:0,
+    wiring_health:0,
+    heartbeat_health:0,
+    safety_heartbeat_health:0,
+    heartbeat_count:0,
+    last_heartbeat_ms:0,
 
-  });
+  })
 
   const [relayStates, setRelayStates] = useState<RelayState>({
     relay1: false,
