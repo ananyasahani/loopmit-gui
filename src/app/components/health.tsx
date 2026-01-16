@@ -82,6 +82,12 @@ export function HealthScore() {
       icon: <Radio className="size-5" />,
       description: 'LiDAR Sensor Health',
     },
+    {
+      label: 'voltage_health from master',
+      value: sensorData.master_voltage_health,
+      icon: <Radio className="size-5" />,
+      description: 'voltage from master Health',
+    },
 
   ];
 

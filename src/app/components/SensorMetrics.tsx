@@ -18,6 +18,30 @@ export function SensorMetrics() {
       max: 24,
     },
     {
+
+      label: 'Voltage from slave 4',
+      value: sensorData.slave4_voltage,
+      displayValue: `${sensorData.slave4_voltage.toFixed(2)}V`,
+      icon: <Gauge className="size-6" />,
+      color: 'text-cyan-500',
+      bgColor: 'bg-cyan-500/10',
+      sliderColor: 'bg-cyan-500',
+      min: 4.8,
+      max: 5,
+    },
+    {
+
+      label: 'Voltage from master',
+      value: sensorData.slave4_voltage,
+      displayValue: `${sensorData.master_voltage.toFixed(2)}V`,
+      icon: <Gauge className="size-6" />,
+      color: 'text-cyan-500',
+      bgColor: 'bg-cyan-500/10',
+      sliderColor: 'bg-cyan-500',
+      min: 4.8,
+      max: 5,
+    },
+    {
       label: 'Gap Height',
       value: sensorData.gapHeight,
       displayValue: `${sensorData.gapHeight.toFixed(1)}mm`,
@@ -61,17 +85,7 @@ export function SensorMetrics() {
       min: 0,
       max: 7,
     },
-    {
-      label: 'Voltage from slave 4',
-      value: sensorData.slave4_voltage,
-      displayValue: `${sensorData.slave4_voltage.toFixed(2)}V`,
-      icon: <Gauge className="size-6" />,
-      color: 'text-cyan-500',
-      bgColor: 'bg-cyan-500/10',
-      sliderColor: 'bg-cyan-500',
-      min: 4.8,
-      max: 5,
-    },
+    
     {
       label: 'Pressure sensor from slave 4',
       value: sensorData.slave4_pressure,
