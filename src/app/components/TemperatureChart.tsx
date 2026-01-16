@@ -12,7 +12,7 @@ const SENSOR_COLORS = ['#3b82f6', '#ef4444', '#10b981', '#f59e0b']; // Blue, Red
 export function TemperatureChart() {
   const { temperatureHistories, isConnected, sensorData } = useESP();
   const [visibleSensors, setVisibleSensors] = useState<boolean[]>([true, true, true, true]);
-  const [threshold, setThreshold] = useState<number>(32);
+  const [threshold, setThreshold] = useState<number>(80);
   const [showAlert, setShowAlert] = useState<boolean>(false);
   const [alertSensors, setAlertSensors] = useState<number[]>([]);
   const [wasAboveThreshold, setWasAboveThreshold] = useState<boolean[]>([false, false, false, false]);

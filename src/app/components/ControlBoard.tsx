@@ -1,5 +1,5 @@
 "use client";
-import { useState } from 'react';
+import { useState,useEffect } from 'react';
 import { motion } from 'motion/react';
 import { Power, Zap, Radio, Settings } from 'lucide-react';
 import { useESP } from '../context/ESPContext';
@@ -16,11 +16,13 @@ export function ControlBoard() {
   const [isOpen, setIsOpen] = useState(false);
   const { relayStates, toggleRelay, turnAllOn, turnAllOff, isConnected } = useESP();
 
+  useEffect(()=>{},[relayStates]);
+
   const relayConfigs: RelayConfig[] = [
-    { id: 1, name: 'Main Power', icon: <Power className="size-5" />, description: 'Primary power system' },
-    { id: 2, name: 'Propulsion', icon: <Zap className="size-5" />, description: 'Propulsion control' },
-    { id: 3, name: 'Levitation', icon: <Radio className="size-5" />, description: 'Magnetic levitation' },
-    { id: 4, name: 'Auxiliary', icon: <Settings className="size-5" />, description: 'Auxiliary systems' },
+    { id: 1, name: 'C2000', icon: <Power className="size-5" />, description: 'Controller for inverter' },
+    { id: 2, name: 'Contactor', icon: <Zap className="size-5" />, description: 'Propulsion and Braking' },
+    { id: 3, name: 'Fans', icon: <Radio className="size-5" />, description: 'Battery colling fans' },
+    { id: 4, name: 'Inverter (15V)', icon: <Settings className="size-5" />, description: 'Driver for Invertor' },
   ];
 
   return (

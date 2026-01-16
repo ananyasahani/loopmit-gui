@@ -6,13 +6,11 @@ import { useESP } from '../context/ESPContext';
 import React from 'react';
 import { StopBtn } from '../components/stopbtn';
 import { Error_log } from '../components/error_log';
-// import  Pod from '../components/pod2';
 import DataStream from '../components/datastream';
 import { HealthScore } from '../components/health';
 import { ControlBoard } from '../components/ControlBoard';
 import LottiePlayer from '../components/dial';
 import ECGMonitor from '../components/safety_monitor';
-import  Pod from '../components/texturetry';
 
 
 export function Dashboard() {
@@ -31,20 +29,14 @@ export function Dashboard() {
         <ConnectionControl />
         <StopBtn />
         <Error_log />
-        
-        
-        {/* <LottiePlayer src= "https://lottie.host/4db68bbd-31f6-4cd8-84eb-189de081159a/IGmMCqhzpt.lottie"/> */}
         <ControlBoard />
         <SensorMetrics />
         <HealthScore/>
-        <ECGMonitor/>
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           <TemperatureChart />
           <IMUCalibration />
         </div>
         {/* <Pod/> */}
-        
-
         <div className="bg-card border border-border rounded-lg p-6">
           <h3 className="mb-4 text-foreground">System Status</h3>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">

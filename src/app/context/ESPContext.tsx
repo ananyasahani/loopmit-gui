@@ -44,6 +44,7 @@ declare global {
 
 interface SensorData {
   gapHeight: number;
+  gapHeight2:number;
   objectTemp: number; // Keep for backward compatibility
   temperatures: number[]; // Array of 4 temperature sensor values
   voltage: number;
@@ -258,6 +259,9 @@ class DataParser {
       if (rawData.gap_height !== undefined) {
         result.gapHeight = rawData.gap_height;
       }
+      if (rawData.gap_height2 !== undefined) {
+        result.gapHeight2 = rawData.gap_height2;
+      }
       if (rawData.voltage_health !== undefined) {
         result.voltage_health = rawData.voltage_health;
       }
@@ -270,11 +274,14 @@ class DataParser {
       if (rawData.icg_health !== undefined) {
         result.icg_health = rawData.icg_health;
       }
-      if (rawData.voltage_health !== undefined) {
-        result.voltage_health = rawData.voltage_health;
+      if (rawData.voltage !== undefined) {
+        result.voltage = rawData.voltage;
       }
       if (rawData.slave4_voltage_health !== undefined) {
         result.slave4_voltage_health = rawData.slave4_voltage_health;
+      }
+      if (rawData.slave4_voltage !== undefined) {
+        result.slave4_voltage= rawData.slave4_voltage_health;
       }
       if (rawData.temp2_health !== undefined) {
         result.temp2_health = rawData.temp2_health;
@@ -328,10 +335,6 @@ class DataParser {
       // Fallback to single object_temp if available
       else if (rawData.object_temp !== undefined) {
         result.temperatures = [rawData.object_temp, 0, 0, 0];
-      }
-
-      if (rawData.voltage !== undefined) {
-        result.voltage = rawData.voltage;
       }
 
       if (Array.isArray(rawData.orientation) && rawData.orientation.length >= 3) {
@@ -491,6 +494,7 @@ export const ESPProvider: React.FC<{ children: React.ReactNode }> = ({ children 
 
   const [sensorData, setSensorData] = useState<SensorData>({
     gapHeight: 0,
+    gapHeight2:0,
     objectTemp: 0,
     temperatures: [0, 0, 0, 0],
     voltage: 0,
@@ -538,7 +542,7 @@ export const ESPProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         const extracted = dataParser.extractSensorData(jsonData);
         
         setSensorData(prev => ({ ...prev, ...extracted }));
-
+  
         // Update temperature histories for multiple sensors
         if (extracted.temperatures && Array.isArray(extracted.temperatures)) {
           setTemperatureHistories(prev => 
@@ -575,15 +579,17 @@ export const ESPProvider: React.FC<{ children: React.ReactNode }> = ({ children 
             historyManager.addPoint(prev, extracted.voltage!)
           );
         }
-
+  
+        // ✅ FIXED: Update relay states from JSON with functional update
         if (jsonData.relayStates) {
-          setRelayStates(jsonData.relayStates);
+          setRelayStates(prev => ({ ...prev, ...jsonData.relayStates }));
         }
       }
-
+  
+      // ✅ FIXED: Update relay states from STATE: format with functional update
       const relayState = dataParser.parseRelayState(line);
       if (relayState) {
-        setRelayStates(relayState);
+        setRelayStates(prev => ({ ...prev, ...relayState }));
       }
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : String(error);
