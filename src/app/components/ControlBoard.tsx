@@ -17,9 +17,9 @@ export function ControlBoard() {
   const { relayStates, toggleRelay, turnAllOn, turnAllOff, isConnected } = useESP();
 
   const relayConfigs: RelayConfig[] = [
-    { id: 1, name: 'Main Power', icon: <Power className="size-5" />, description: 'Primary power system' },
-    { id: 2, name: 'Propulsion', icon: <Zap className="size-5" />, description: 'Propulsion control' },
-    { id: 3, name: 'Levitation', icon: <Radio className="size-5" />, description: 'Magnetic levitation' },
+    { id: 1, name: 'Contactor', icon: <Power className="size-5" />, description: 'Primary power system' },
+    { id: 2, name: 'Fans', icon: <Zap className="size-5" />, description: 'Battery cooling' },
+    { id: 3, name: 'C2000', icon: <Radio className="size-5" />, description: 'Inverter ON ' },
     { id: 4, name: 'Auxiliary', icon: <Settings className="size-5" />, description: 'Auxiliary systems' },
   ];
 
