@@ -1,8 +1,8 @@
-node_modules/
-*.stl
-*.STL
+# node_modules/ - commented out to include in repo
+# *.stl - tracked via Git LFS
+# *.STL - tracked via Git LFS
 # Large binary files
-public/**/*.stl
-public/**/*.STL
-next-swc.*.node
+# public/**/*.stl - tracked via Git LFS
+# public/**/*.STL - tracked via Git LFS
+# next-swc.*.node - tracked via Git LFS
 
