@@ -43,7 +43,6 @@ export function Dashboard() {
             Logout
           </button>
         </div>
-
         <ConnectionControl />
         <StopBtn />
         <HealthSlider/>
