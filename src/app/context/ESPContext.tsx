@@ -3,7 +3,82 @@ import React, { createContext, useContext, useState, useCallback, useEffect } fr
 // ============================================================================
 // 0. WEB SERIAL API TYPE DEFINITIONS
 // ============================================================================
+const EMERGENCY_REASONS = {
+  EMR_NONE: 0,
+  EMR_IMU_FAIL: 1 << 0,
+  EMR_LIDAR1_FAIL: 1 << 1,
+  EMR_LIDAR2_FAIL: 1 << 2,
+  EMR_VOLTAGE1_FAIL: 1 << 3,
+  EMR_VOLTAGE2_FAIL: 1 << 4,
+  EMR_VOLTAGE3_FAIL: 1 << 5,
+  EMR_TEMP1_FAIL: 1 << 6,
+  EMR_TEMP2_FAIL: 1 << 7,
+  EMR_TEMP3_FAIL: 1 << 8,
+  EMR_PRESSURE_FAIL: 1 << 9,
+  EMR_ORIENTATION: 1 << 10,
+  EMR_ACCELERATION: 1 << 11,
+  EMR_LIDAR_GAP: 1 << 12,
+  EMR_MANUAL_ESTOP: 1 << 13,
+} as const;
 
+const EMERGENCY_MESSAGES: Record<number, { message: string; type: 'error' | 'warning' | 'info' }> = {
+  [EMERGENCY_REASONS.EMR_IMU_FAIL]: {
+    message: 'IMU sensor failure detected',
+    type: 'error',
+  },
+  [EMERGENCY_REASONS.EMR_LIDAR1_FAIL]: {
+    message: 'LIDAR 1 sensor failure detected',
+    type: 'error',
+  },
+  [EMERGENCY_REASONS.EMR_LIDAR2_FAIL]: {
+    message: 'LIDAR 2 sensor failure detected',
+    type: 'error',
+  },
+  [EMERGENCY_REASONS.EMR_VOLTAGE1_FAIL]: {
+    message: 'Voltage sensor 1 failure detected',
+    type: 'error',
+  },
+  [EMERGENCY_REASONS.EMR_VOLTAGE2_FAIL]: {
+    message: 'Voltage sensor 2 failure detected',
+    type: 'error',
+  },
+  [EMERGENCY_REASONS.EMR_VOLTAGE3_FAIL]: {
+    message: 'Voltage sensor 3 failure detected',
+    type: 'error',
+  },
+  [EMERGENCY_REASONS.EMR_TEMP1_FAIL]: {
+    message: 'Temperature sensor 1 failure detected',
+    type: 'error',
+  },
+  [EMERGENCY_REASONS.EMR_TEMP2_FAIL]: {
+    message: 'Temperature sensor 2 failure detected',
+    type: 'error',
+  },
+  [EMERGENCY_REASONS.EMR_TEMP3_FAIL]: {
+    message: 'Temperature sensor 3 failure detected',
+    type: 'error',
+  },
+  [EMERGENCY_REASONS.EMR_PRESSURE_FAIL]: {
+    message: 'Pressure sensor failure detected',
+    type: 'error',
+  },
+  [EMERGENCY_REASONS.EMR_ORIENTATION]: {
+    message: 'Orientation out of acceptable range',
+    type: 'warning',
+  },
+  [EMERGENCY_REASONS.EMR_ACCELERATION]: {
+    message: 'Acceleration limit exceeded',
+    type: 'warning',
+  },
+  [EMERGENCY_REASONS.EMR_LIDAR_GAP]: {
+    message: 'LIDAR gap detection warning',
+    type: 'warning',
+  },
+  [EMERGENCY_REASONS.EMR_MANUAL_ESTOP]: {
+    message: 'Manual emergency stop activated',
+    type: 'error',
+  },
+};
 declare global {
   interface SerialPort extends EventTarget {
     readonly readable: ReadableStream<Uint8Array>;
@@ -47,27 +122,28 @@ interface SensorData {
   gapHeight2:number;
   objectTemp: number; // Keep for backward compatibility
   temperatures: number[]; // Array of 4 temperature sensor values
-  voltage: number;
+  voltage:number;
   orientation: { x: number; y: number; z: number };
   acceleration: { x: number; y: number; z: number; magnitude: number };
   calibration: { gyro: number; sys: number; magneto: number };
-  bno_health: number;
-  icg_health: number;
-  voltage_health:number;
-  temp4_health:number;
-  lidar_health:number;
-  temp2_health:number;
+  bno_health: number;////////////
+  icg_health: number;////////////
+  voltage_health:number;////////
+  temp4_health:number;//////////
+  lidar_health:number;/////////////
+  temp2_health:number;/////////
   slave4_voltage:number;
-  slave4_voltage_health:number;
+  slave4_voltage_health:number;////////////
   slave4_pressure:number;
-  slave4_pressure_health:number;
+  slave4_pressure_health:number;//////////
   master_voltage:number;
-  master_voltage_health:number;
+  master_voltage_health:number;/////////
   wiring_health:number;
   heartbeat_health:number;
   safety_heartbeat_health:number;
   heartbeat_count:number;
   last_heartbeat_ms:number;
+  emergency_reason_mask: number;
 }
 
 interface RelayState {
@@ -268,6 +344,9 @@ class DataParser {
       if (rawData.lidar_health !== undefined) {
         result.lidar_health = rawData.lidar_health;
       }
+      if (rawData.emergency_reason_mask !== undefined) {
+      result.emergency_reason_mask = rawData.emergency_reason_mask;
+    }
       if (rawData.bno_health !== undefined) {
         result.bno_health = rawData.bno_health;
       }
@@ -281,7 +360,7 @@ class DataParser {
         result.slave4_voltage_health = rawData.slave4_voltage_health;
       }
       if (rawData.slave4_voltage !== undefined) {
-        result.slave4_voltage= rawData.slave4_voltage_health;
+        result.slave4_voltage= rawData.slave4_voltage;
       }
       if (rawData.temp2_health !== undefined) {
         result.temp2_health = rawData.temp2_health;
@@ -486,6 +565,7 @@ export const ESPProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       return updated.slice(-1000);
     });
   }, []);
+  
 
   useEffect(() => {
     serialManager.setErrorCallback(addError);
@@ -497,7 +577,7 @@ export const ESPProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     gapHeight2:0,
     objectTemp: 0,
     temperatures: [0, 0, 0, 0],
-    voltage: 0,
+    voltage:0,
     orientation: { x: 0, y: 0, z: 0 },
     acceleration: { x: 0, y: 0, z: 0, magnitude: 0 },
     calibration: { gyro: 0, sys: 0, magneto: 0 },
@@ -518,8 +598,50 @@ export const ESPProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     safety_heartbeat_health:0,
     heartbeat_count:0,
     last_heartbeat_ms:0,
+    emergency_reason_mask: 0,
 
   })
+  // Track which errors have already been logged to prevent duplicates
+  const [loggedEmergencies, setLoggedEmergencies] = useState<Set<number>>(new Set());
+
+  // Function to check and log emergency reasons
+  const checkEmergencyReasons = useCallback((mask: number) => {
+    if (mask === EMERGENCY_REASONS.EMR_NONE) {
+      // Clear logged emergencies when mask is zero
+      setLoggedEmergencies(new Set());
+      return;
+    }
+
+    const newEmergencies = new Set<number>();
+    
+    // Check each bit in the mask
+    Object.entries(EMERGENCY_REASONS).forEach(([key, bitValue]) => {
+      if (key === 'EMR_NONE') return;
+      
+      // Check if this bit is set in the mask
+      if ((mask & bitValue) !== 0) {
+        newEmergencies.add(bitValue);
+        
+        // Only log if this emergency hasn't been logged yet
+        if (!loggedEmergencies.has(bitValue)) {
+          const errorInfo = EMERGENCY_MESSAGES[bitValue];
+          if (errorInfo) {
+            addError(errorInfo.message, errorInfo.type);
+          }
+        }
+      }
+    });
+    
+    // Update the logged emergencies set
+    setLoggedEmergencies(newEmergencies);
+  }, [loggedEmergencies, addError]);
+
+  // Monitor emergency_reason_mask changes
+  useEffect(() => {
+    if (sensorData.emergency_reason_mask !== undefined) {
+      checkEmergencyReasons(sensorData.emergency_reason_mask);
+    }
+  }, [sensorData.emergency_reason_mask, checkEmergencyReasons]);
 
   const [relayStates, setRelayStates] = useState<RelayState>({
     relay1: false,
@@ -694,7 +816,7 @@ export const ESPProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   const turnAllOff = async () => {
     try {
       await relayController.turnAllOff();
-      setRelayStates({ relay1: false, relay2: false, relay3: false, relay4: false });
+      setRelayStates(prev => ({ ...prev, relay1: false, relay2: false, relay3: false }));
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : String(err);
       const entry: ErrorLogEntry = {
@@ -706,7 +828,6 @@ export const ESPProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       setErrorLog(prev => [...prev, entry].slice(-1000));
     }
   };
-
   const clearHistory = () => {
     setTemperatureHistory(historyManager.clear());
     setTemperatureHistories([[],[],[],[]]);

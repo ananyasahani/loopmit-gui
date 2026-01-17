@@ -10,7 +10,7 @@ import DataStream from '../components/datastream';
 import { HealthScore } from '../components/health';
 import { ControlBoard } from '../components/ControlBoard';
 import LottiePlayer from '../components/dial';
-import ECGMonitor from '../components/safety_monitor';
+import HealthSlider from '../components/overallhealth'
 
 
 export function Dashboard() {
@@ -28,12 +28,13 @@ export function Dashboard() {
 
         <ConnectionControl />
         <StopBtn />
+        <HealthSlider/>
         <Error_log />
         <ControlBoard />
         <SensorMetrics />
+        <TemperatureChart />
         <HealthScore/>
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          <TemperatureChart />
           <IMUCalibration />
         </div>
         {/* <Pod/> */}
@@ -56,7 +57,7 @@ export function Dashboard() {
             </div>
             <div className="space-y-2">
               <div className="text-sm text-muted-foreground">Data Rate</div>
-              <div className="text-foreground">{isConnected ? '100 Hz' : 'N/A'}</div>
+              <div className="text-foreground">{isConnected ? '10 Hz' : 'N/A'}</div>
             </div>
           </div>
         </div>

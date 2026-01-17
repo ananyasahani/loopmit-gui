@@ -1,4 +1,4 @@
-import { Activity, Cpu, Battery, Thermometer, Radio } from 'lucide-react';
+import { Activity, Cpu, Battery, Thermometer, Radio, Gauge } from 'lucide-react';
 import { useESP } from '../context/ESPContext';
 import React from 'react';
 
@@ -47,41 +47,61 @@ export function HealthScore() {
       description: 'ICG IMU Sensor Health',
     },
     {
-      label: 'Voltage Health',
-      value: sensorData.voltage_health,
-      icon: <Battery className="size-5" />,
-      description: 'Power System Health',
-    },
-    {
-      label: 'Temperature Health',
-      value: sensorData.temp2_health,
-      icon: <Thermometer className="size-5" />,
-      description: 'Temperature Sensor Health',
-    },
-    {
       label: 'LiDAR Health',
       value: sensorData.lidar_health,
       icon: <Radio className="size-5" />,
       description: 'LiDAR Sensor Health',
     },
     {
-      label: 'Temperature 4 health ',
-      value: sensorData.temp4_health,
+      label: 'LiDAR-2 Health',
+      value: sensorData.lidar_health,
       icon: <Radio className="size-5" />,
+      description: 'LiDAR Sensor Health',
+    },
+    {
+      label: 'Voltage Health',
+      value: sensorData.voltage_health,
+      icon: <Battery className="size-5" />,
+      description: 'Power System Health',
+    },
+    {
+      label: 'voltage_health from slave 4',
+      value: sensorData.slave4_voltage_health,
+      icon: <Battery className="size-5" />,
+      description: 'LiDAR Sensor Health',
+    },
+    {
+      label: 'voltage_health from slave 3',
+      value: sensorData.master_voltage_health,
+      icon: <Battery className="size-5" />,
+      description: 'LiDAR Sensor Health',
+    },
+    {
+      label: 'Temperature Health',
+      value: sensorData.temp4_health,
+      icon: <Thermometer className="size-5" />,
+      description: 'Temperature Sensor Health',
+    },
+    {
+      label: 'Temperature 4 health ',
+      value: sensorData.temp2_health,
+      icon: <Thermometer className="size-5" />,
+      description: 'LiDAR Sensor Health',
+    },
+    {
+      label: 'Temperature tbd ',
+      value: sensorData.temp2_health,
+      icon: <Thermometer className="size-5" />,
       description: 'LiDAR Sensor Health',
     },
     {
       label: 'pressure health',
       value: sensorData.slave4_pressure_health,
-      icon: <Radio className="size-5" />,
+      icon: <Gauge className="size-5" />,
       description: 'LiDAR Sensor Health',
     },
-    {
-      label: 'voltage_health from slave 4',
-      value: sensorData.slave4_voltage_health,
-      icon: <Radio className="size-5" />,
-      description: 'LiDAR Sensor Health',
-    },
+    
+    
 
   ];
 

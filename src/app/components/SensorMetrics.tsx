@@ -1,4 +1,4 @@
-import { Battery, Gauge, Move, Compass } from 'lucide-react';
+import { Battery, Gauge, Move, Compass, Thermometer, ThermometerIcon } from 'lucide-react';
 import { useESP } from '../context/ESPContext';
 import React from 'react';
 
@@ -7,15 +7,53 @@ export function SensorMetrics() {
 
   const metrics = [
     {
-      label: 'Voltage',
+      //slave3
+      label: 'Voltage (5V)',
+      value: sensorData.voltage,
+      displayValue: `${sensorData.master_voltage.toFixed(2)}V`,
+      icon: <Battery className="size-6" />,
+      color: 'text-blue-500',
+      bgColor: 'bg-blue-500/10',
+      sliderColor: 'bg-blue-500',
+      min: 0,
+      max: 6,
+    },
+    {
+      //safety
+      label: 'Master Voltage (5V)',
+      value: sensorData.voltage,
+      displayValue: `${sensorData.master_voltage.toFixed(2)}V`,
+      icon: <Battery className="size-6" />,
+      color: 'text-blue-500',
+      bgColor: 'bg-blue-500/10',
+      sliderColor: 'bg-blue-500',
+      min: 0,
+      max: 6,
+    },
+    {
+      // slave2
+      label: 'LV Battery (24V)',
       value: sensorData.voltage,
       displayValue: `${sensorData.voltage.toFixed(2)}V`,
       icon: <Battery className="size-6" />,
       color: 'text-blue-500',
       bgColor: 'bg-blue-500/10',
       sliderColor: 'bg-blue-500',
-      min: 22,
-      max: 24,
+      min: 0,
+      max: 30,
+    },
+  
+    
+    {
+      label: 'LV Battery (15V)',
+      value: sensorData.slave4_voltage,
+      displayValue: `${sensorData.slave4_voltage.toFixed(2)}V`,
+      icon: <Battery className="size-6" />,
+      color: 'text-blue-500',
+      bgColor: 'bg-cyan-500/10',
+      sliderColor: 'bg-cyan-500',
+      min: 0,
+      max: 20,
     },
     {
       label: 'Gap Height',
@@ -62,16 +100,39 @@ export function SensorMetrics() {
       max: 7,
     },
     {
-      label: 'Voltage from slave 4',
-      value: sensorData.slave4_voltage,
-      displayValue: `${sensorData.slave4_voltage.toFixed(2)}V`,
-      icon: <Gauge className="size-6" />,
-      color: 'text-cyan-500',
-      bgColor: 'bg-cyan-500/10',
-      sliderColor: 'bg-cyan-500',
-      min: 4.8,
-      max: 5,
+      label: 'Temperature (#slave2)',
+      value: sensorData.acceleration.x,
+      displayValue: `${sensorData.temperatures[0].toFixed(3)}m/s²`,
+      icon: <Thermometer className="size-6" />,
+      color: 'text-yellow-500',
+      bgColor: 'bg-yellow-500/10',
+      sliderColor: 'bg-yellow-500',
+      min: 0,
+      max: 120,
     },
+    {
+      label: 'Temperature (#slave3)',
+      value: sensorData.acceleration.x,
+      displayValue: `${sensorData.temperatures[1].toFixed(3)}m/s²`,
+      icon: <Thermometer className="size-6" />,
+      color: 'text-yellow-500',
+      bgColor: 'bg-yellow-500/10',
+      sliderColor: 'bg-yellow-500',
+      min: 0,
+      max: 120,
+    },
+    {
+      label: 'Temperature (#slave4)',
+      value: sensorData.acceleration.x,
+      displayValue: `${sensorData.temperatures[2].toFixed(3)}m/s²`,
+      icon: <Thermometer className="size-6" />,
+      color: 'text-yellow-500',
+      bgColor: 'bg-yellow-500/10',
+      sliderColor: 'bg-yellow-500',
+      min: 0,
+      max: 120,
+    },
+    
     {
       label: 'Pressure sensor from slave 4',
       value: sensorData.slave4_pressure,
@@ -80,8 +141,8 @@ export function SensorMetrics() {
       color: 'text-orange-500',
       bgColor: 'bg-orange-500/10',
       sliderColor: 'bg-orange-500',
-      min: 30,
-      max: 40,
+      min: 0,
+      max: 8,
     },
   ];
 
@@ -109,7 +170,7 @@ export function SensorMetrics() {
             </div>
             <div className="space-y-3">
               <div className="text-2xl font-semibold text-foreground">{metric.displayValue}</div>
-              <div className="text-sm text-muted-foreground">{metric.label}</div>
+              <div className=" text-md text-muted-foreground">{metric.label}</div>
               
               {/* Slider */}
               <div className="space-y-1">
