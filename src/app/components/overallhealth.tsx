@@ -97,9 +97,9 @@ const getGradientColor = (percentage: number): string => {
 };
 
 const HealthSlider = () => {
-  const { sensorData } = useESP();
+  const SensorData  = useESP();
 
-  const healthPercentage = calculateOverallHealth(sensorData);
+  const healthPercentage = calculateOverallHealth(SensorData)
   const gradientColor = getGradientColor(healthPercentage);
 
   const getStatusText = (percentage: number): string => {

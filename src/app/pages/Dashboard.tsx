@@ -10,8 +10,8 @@ import DataStream from '../components/datastream';
 import { HealthScore } from '../components/health';
 import { ControlBoard } from '../components/ControlBoard';
 import LottiePlayer from '../components/dial';
-import HealthSlider from '../components/overallhealth'
-
+import HealthSlider from '../components/overallhealth';
+import { LogOut } from 'lucide-react';
 
 export function Dashboard() {
   const { isConnected } = useESP();
@@ -31,7 +31,7 @@ export function Dashboard() {
               Real-time sensor telemetry and system monitoring for hyperloop pod prototype
             </p>
           </div>
-          <Button
+          <button
             onClick={handleLogout}
             className="bg-[#39C3EF] hover:bg-[#39C3EF]/90 text-black transition font-medium duration-200 h-10 rounded-lg px-6 flex items-center justify-center gap-2"
             style={{
@@ -41,7 +41,7 @@ export function Dashboard() {
           >
             <LogOut className="size-4" />
             Logout
-          </Button>
+          </button>
         </div>
 
         <ConnectionControl />
@@ -82,4 +82,8 @@ export function Dashboard() {
       </div>
     </div>
   );
+}
+
+function useClerk(): { signOut: any; } {
+  throw new Error('Function not implemented.');
 }
