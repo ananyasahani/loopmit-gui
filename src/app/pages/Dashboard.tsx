@@ -12,6 +12,8 @@ import { ControlBoard } from '../components/ControlBoard';
 import LottiePlayer from '../components/dial';
 import HealthSlider from '../components/overallhealth';
 import { LogOut } from 'lucide-react';
+import { useClerk } from '@clerk/clerk-react';
+import SafetyMonitor from '../components/safety_monitor';
 
 export function Dashboard() {
   const { isConnected } = useESP();
@@ -44,15 +46,17 @@ export function Dashboard() {
           </button>
         </div>
         <ConnectionControl />
-        <StopBtn />
+        
         <HealthSlider/>
         <Error_log />
+        <StopBtn />
         <ControlBoard />
         <SensorMetrics />
         <TemperatureChart />
         <HealthScore/>
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           <IMUCalibration />
+          <SafetyMonitor/>
         </div>
         {/* <Pod/> */}
         <div className="bg-card border border-border rounded-lg p-6">
@@ -81,8 +85,4 @@ export function Dashboard() {
       </div>
     </div>
   );
-}
-
-function useClerk(): { signOut: any; } {
-  throw new Error('Function not implemented.');
 }

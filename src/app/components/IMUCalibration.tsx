@@ -33,7 +33,7 @@ export function IMUCalibration() {
   ];
 
   return (
-    <div className="bg-card border border-border rounded-lg p-6">
+    <div className="bg-card border border-green-500 rounded-lg p-6">
       <div className="flex items-center justify-between mb-4">
         <h3 className="text-foreground">IMU Calibration Status</h3>
         {!isConnected && (

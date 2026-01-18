@@ -109,7 +109,7 @@ const HealthSlider = () => {
     return 'Critical';
   };
 
-  if (!sensorData) {
+  if (!SensorData) {
     return (
       <div className="w-full p-6 bg-gray-900 rounded-lg shadow-xl">
         <p className="text-white">No sensor data available</p>
@@ -118,7 +118,7 @@ const HealthSlider = () => {
   }
 
   return (
-    <div className="w-full p-6 bg-gray-900 rounded-lg shadow-xl">
+    <div className="w-full p-6 bg-black rounded-lg shadow-xl">
       <div className="mb-6">
         <div className="flex justify-between items-center mb-2">
           <h2 className="text-xl font-bold text-white">System Health</h2>

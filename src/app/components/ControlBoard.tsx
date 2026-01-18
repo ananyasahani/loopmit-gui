@@ -43,21 +43,9 @@ export function ControlBoard() {
         {/* Control content */}
         <div className="px-8 pb-6">
           <div className="flex items-center justify-between mb-4">
-            <h3 className="text-foreground">Relay Control Board</h3>
+            <h3 className="text-foreground">Control Board</h3>
             {isConnected && (
               <div className="flex gap-2">
-                <button
-                  onClick={turnAllOn}
-                  className="px-3 py-1 text-sm bg-green-500/20 text-green-500 rounded hover:bg-green-500/30 transition-colors"
-                >
-                  All ON
-                </button>
-                <button
-                  onClick={turnAllOff}
-                  className="px-3 py-1 text-sm bg-red-500/20 text-red-500 rounded hover:bg-red-500/30 transition-colors"
-                >
-                  All OFF
-                </button>
               </div>
             )}
           </div>
