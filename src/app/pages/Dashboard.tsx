@@ -14,9 +14,10 @@ import HealthSlider from '../components/overallhealth';
 import { LogOut } from 'lucide-react';
 import { useClerk } from '@clerk/clerk-react';
 import SafetyMonitor from '../components/safety_monitor';
+// import Pod from '../components/Pod';
 
 export function Dashboard() {
-  const { isConnected } = useESP();
+  const { isConnected ,sensorData} = useESP();
   const { signOut } = useClerk();
 
   const handleLogout = async () => {
@@ -73,7 +74,7 @@ export function Dashboard() {
               <div className="text-sm text-muted-foreground">Connection</div>
               <div className="flex items-center gap-2">
                 <div className={`size-3 rounded-full ${isConnected ? 'bg-green-500 animate-pulse' : 'bg-red-500'}`} />
-                <span className="text-foreground">{isConnected ? 'Connected' : 'Offline'}</span>
+                <span className="text-foreground">{sensorData.current_state}</span>
               </div>
             </div>
             <div className="space-y-2">

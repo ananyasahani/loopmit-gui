@@ -44,7 +44,7 @@ export default function App() {
   // Signed-in flow
   if (isLoaded && isSignedIn) {
     if (loading || !showMain) {
-      return <MultiStepLoader loadingStates={loadingStates} loading={loading} duration={2000} />;
+      return <MultiStepLoader loadingStates={loadingStates} loading={loading} duration={100} />;
     }
     return <MainPage />;
   }

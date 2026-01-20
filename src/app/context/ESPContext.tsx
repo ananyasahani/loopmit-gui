@@ -118,34 +118,62 @@ declare global {
 // ============================================================================
 
 interface SensorData {
-  gapHeight: number;
-  gapHeight2:number;
-  objectTemp: number; // Keep for backward compatibility
-  temperatures: number[]; // Array of 4 temperature sensor values
-  voltage:number;
-  orientation: { x: number; y: number; z: number };
-  acceleration: { x: number; y: number; z: number; magnitude: number };
+  
+  // IMU - Orientation
+  orientation: { x: number; y: number; z: number }; // [heading, pitch, roll] - array format
+  object_temp:number;
   calibration: { gyro: number; sys: number; magneto: number };
-  bno_health: number;////////////
-  icg_health: number;////////////
-  voltage_health:number;////////
-  temp4_health:number;//////////
-  lidar_health:number;/////////////
-  temp2_health:number;/////////
-  slave4_voltage:number;
-  slave4_voltage_health:number;////////////
-  slave4_pressure:number;
-  slave4_pressure_health:number;//////////
-  master_voltage:number;
-  master_voltage_health:number;/////////
+
+  
+  // IMU - Acceleration
+  acceleration: { x: number; y: number; z: number; magnitude: number }; // [accel_x, accel_y, accel_z] - array format
+  
+  // IMU Health
+  bno_health: number;
+  icg_health: number;
+  
+  // LIDAR
+  gap_height: number;
+  lidar_health: number;
+  gap_height2: number;
+  lidar2_health: number;
+  
+  temperatures: number[];//
+  temp1_health: number;
+  temp2_health: number;
+  temp3_health: number;
+  
+  // Voltages
+  voltage1: number;
+  voltage1_health: number;
+  voltage2: number;
+  voltage2_health: number;
+  voltage3: number;
+  voltage3_health: number;
+  
+  // Pressure
+  pressure: number;
+  pressure_health: number;
+  
+  // System State
+  emergency_reason_mask: number; // Binary string like "0000000000000000"
+
+ //safety esp
   wiring_health:number;
-  heartbeat_health:number;
-  safety_heartbeat_health:number;
   heartbeat_count:number;
   last_heartbeat_ms:number;
-  emergency_reason_mask: number;
-}
+  
+  
+  // Safety & Heartbeat
+  safety_heartbeat_health: number;
+  safety_hb_last_time: number;
+  timestamp: number;
+  safety_heartbeat_count: number;
 
+
+  //state info
+  current_state:string;
+}
 interface RelayState {
   relay1: boolean;
   relay2: boolean;
@@ -333,69 +361,105 @@ class DataParser {
       const result: Partial<SensorData> = {};
 
       if (rawData.gap_height !== undefined) {
-        result.gapHeight = rawData.gap_height;
+        result.gap_height = rawData.gap_height;
       }
       if (rawData.gap_height2 !== undefined) {
-        result.gapHeight2 = rawData.gap_height2;
-      }
-      if (rawData.voltage_health !== undefined) {
-        result.voltage_health = rawData.voltage_health;
+        result.gap_height2 = rawData.gap_height2;
       }
       if (rawData.lidar_health !== undefined) {
         result.lidar_health = rawData.lidar_health;
       }
-      if (rawData.emergency_reason_mask !== undefined) {
-      result.emergency_reason_mask = rawData.emergency_reason_mask;
-    }
+      if (rawData.current_state !== undefined) {
+        result.current_state = rawData.current_state;
+      }
+      if (rawData.lidar2_health !== undefined) {
+        result.lidar2_health = rawData.lidar2_health;
+      }
+      if (rawData.object_temp !== undefined) {
+        result.object_temp = rawData.object_temp;
+      }
+  
+      // IMU Health
       if (rawData.bno_health !== undefined) {
         result.bno_health = rawData.bno_health;
       }
       if (rawData.icg_health !== undefined) {
         result.icg_health = rawData.icg_health;
       }
-      if (rawData.voltage !== undefined) {
-        result.voltage = rawData.voltage;
+  
+      // Voltages
+      if (rawData.voltage1 !== undefined) {
+        result.voltage1 = rawData.voltage1;
       }
-      if (rawData.slave4_voltage_health !== undefined) {
-        result.slave4_voltage_health = rawData.slave4_voltage_health;
+      if (rawData.voltage1_health !== undefined) {
+        result.voltage1_health = rawData.voltage1_health;
       }
-      if (rawData.slave4_voltage !== undefined) {
-        result.slave4_voltage= rawData.slave4_voltage;
+      if (rawData.voltage2 !== undefined) {
+        result.voltage2 = rawData.voltage2;
+      }
+      if (rawData.voltage2_health !== undefined) {
+        result.voltage2_health = rawData.voltage2_health;
+      }
+      if (rawData.voltage3 !== undefined) {
+        result.voltage3 = rawData.voltage3;
+      }
+      if (rawData.voltage3_health !== undefined) {
+        result.voltage3_health = rawData.voltage3_health;
+      }
+  
+      // Temperature Health
+      if (rawData.temp1_health !== undefined) {
+        result.temp1_health = rawData.temp1_health;
       }
       if (rawData.temp2_health !== undefined) {
         result.temp2_health = rawData.temp2_health;
       }
-      if (rawData.temp4_health !== undefined) {
-        result.temp4_health = rawData.temp4_health;
+      if (rawData.temp3_health !== undefined) {
+        result.temp3_health = rawData.temp3_health;
       }
-
-      if (rawData.object_temp !== undefined) {
-        result.objectTemp = rawData.object_temp;
+  
+      // Pressure
+      if (rawData.pressure !== undefined) {
+        result.pressure = rawData.pressure;
       }
-
-      if (rawData.master_voltage !== undefined) {
-        result.master_voltage = rawData.master_voltage;
-      }if (rawData.master_voltage_health !== undefined) {
-        result.master_voltage_health = rawData.master_voltage_health;
-      }if (rawData.wiring_health !== undefined) {
+      if (rawData.pressure_health !== undefined) {
+        result.pressure_health = rawData.pressure_health;
+      }
+  
+      // System State
+      if (rawData.emergency_reason_mask !== undefined) {
+        result.emergency_reason_mask = rawData.emergency_reason_mask;
+      }
+  
+      // Safety ESP
+      if (rawData.wiring_health !== undefined) {
         result.wiring_health = rawData.wiring_health;
-      }if (rawData.heartbeat_health !== undefined) {
-        result.heartbeat_health = rawData.heartbeat_health;
-      }if (rawData.safety_heartbeat_health !== undefined) {
-        result.safety_heartbeat_health = rawData.safety_heartbeat_health;
-      }if (rawData.heartbeat_count !== undefined) {
+      }
+      if (rawData.heartbeat_count !== undefined) {
         result.heartbeat_count = rawData.heartbeat_count;
-      }if (rawData.last_heartbeat_ms !== undefined) {
+      }
+      if (rawData.last_heartbeat_ms !== undefined) {
         result.last_heartbeat_ms = rawData.last_heartbeat_ms;
+      }
+  
+      // Safety & Heartbeat
+      if (rawData.safety_heartbeat_health !== undefined) {
+        result.safety_heartbeat_health = rawData.safety_heartbeat_health;
+      }
+      if (rawData.safety_hb_last_time !== undefined) {
+        result.safety_hb_last_time = rawData.safety_hb_last_time;
+      }
+      if (rawData.timestamp !== undefined) {
+        result.timestamp = rawData.timestamp;
       }
 
       // Extract multiple temperature sensors
       // Support array format: temp_sensors: [t1, t2, t3, t4]
-      if (Array.isArray(rawData.temp_sensors) && rawData.temp_sensors.length >= 4) {
+      if (Array.isArray(rawData.temp_sensors) && rawData.temp_sensors.length >= 2) {
         result.temperatures = rawData.temp_sensors.slice(0, 4);
         // Also set objectTemp to first sensor for backward compatibility
-        if (!result.objectTemp) {
-          result.objectTemp = rawData.temp_sensors[0];
+        if (!result.object_temp) {
+          result.object_temp = rawData.temp_sensors[0];
         }
       }
       // Support individual fields: temp1, temp2, temp3, temp4
@@ -407,8 +471,8 @@ class DataParser {
           rawData.temp3 ?? 0,
           rawData.temp4 ?? 0,
         ];
-        if (!result.objectTemp && rawData.temp1 !== undefined) {
-          result.objectTemp = rawData.temp1;
+        if (!result.object_temp && rawData.temp1 !== undefined) {
+          result.object_temp = rawData.temp1;
         }
       }
       // Fallback to single object_temp if available
@@ -573,34 +637,60 @@ export const ESPProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   }, [serialManager, dataParser, addError]);
 
   const [sensorData, setSensorData] = useState<SensorData>({
-    gapHeight: 0,
-    gapHeight2:0,
-    objectTemp: 0,
-    temperatures: [0, 0, 0, 0],
-    voltage:0,
+    // LIDAR
+    gap_height: 0,
+    gap_height2: 0,
+    lidar_health: 0,
+    lidar2_health: 0,
+    object_temp:0,
+    
+    
+    // IMU - Orientation & Acceleration
     orientation: { x: 0, y: 0, z: 0 },
     acceleration: { x: 0, y: 0, z: 0, magnitude: 0 },
-    calibration: { gyro: 0, sys: 0, magneto: 0 },
-    bno_health:0,
-    icg_health:0,
-    voltage_health:0,
-    temp2_health:0,
-    lidar_health:0,
-    temp4_health:0,
-    slave4_voltage:0,
-    slave4_voltage_health:0,
-    slave4_pressure:0,
-    slave4_pressure_health:0,
-    master_voltage:0,
-    master_voltage_health:0,
-    wiring_health:0,
-    heartbeat_health:0,
-    safety_heartbeat_health:0,
-    heartbeat_count:0,
-    last_heartbeat_ms:0,
-    emergency_reason_mask: 0,
+    calibration: { gyro: 0, sys: 0,magneto: 0 },
 
-  })
+    
+    // IMU Health
+    bno_health: 0,
+    icg_health: 0,
+    
+    // Temperatures
+    temperatures: [0, 0, 0],
+    temp1_health: 0,
+    temp2_health: 0,
+    temp3_health: 0,
+    
+    // Voltages
+    voltage1: 0,
+    voltage1_health: 0,
+    voltage2: 0,
+    voltage2_health: 0,
+    voltage3: 0,
+    voltage3_health: 0,
+    
+    // Pressure
+    pressure: 0,
+    pressure_health: 0,
+    
+    // System State
+    emergency_reason_mask: 0,
+    
+    // Safety ESP
+    wiring_health: 0,
+    heartbeat_count: 0,
+    last_heartbeat_ms: 0,
+    
+    // Safety & Heartbeat
+    safety_heartbeat_health: 0,
+    safety_hb_last_time: 0,
+    timestamp: 0,
+    safety_heartbeat_count: 0,
+
+    //current state info
+    current_state:"",
+  });
+  
   // Track which errors have already been logged to prevent duplicates
   const [loggedEmergencies, setLoggedEmergencies] = useState<Set<number>>(new Set());
 
@@ -680,25 +770,25 @@ export const ESPProvider: React.FC<{ children: React.ReactNode }> = ({ children 
               historyManager.addPoint(prev, extracted.temperatures![0])
             );
           }
-        } else if (extracted.objectTemp !== undefined) {
+        } else if (extracted.object_temp !== undefined) {
           // Fallback: if only objectTemp is provided, update first sensor
           setTemperatureHistory(prev => 
-            historyManager.addPoint(prev, extracted.objectTemp!)
+            historyManager.addPoint(prev, extracted.object_temp!)
           );
           setTemperatureHistories(prev => {
             const newHistories = [...prev];
-            newHistories[0] = historyManager.addPoint(newHistories[0], extracted.objectTemp!);
+            newHistories[0] = historyManager.addPoint(newHistories[0], extracted.object_temp!);
             return newHistories;
           });
         }
-        if (extracted.gapHeight !== undefined) {
+        if (extracted.gap_height !== undefined) {
           setGapHeightHistory(prev => 
-            historyManager.addPoint(prev, extracted.gapHeight!)
+            historyManager.addPoint(prev, extracted.gap_height!)
           );
         }
-        if (extracted.voltage !== undefined) {
+        if (extracted.voltage1 !== undefined) {
           setVoltageHistory(prev => 
-            historyManager.addPoint(prev, extracted.voltage!)
+            historyManager.addPoint(prev, extracted.voltage1!)
           );
         }
   
@@ -816,7 +906,7 @@ export const ESPProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   const turnAllOff = async () => {
     try {
       await relayController.turnAllOff();
-      setRelayStates(prev => ({ ...prev, relay1: false, relay2: false, relay3: false }));
+      setRelayStates(prev => ({ ...prev , relay1: false, relay3: false, relay4: false }));
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : String(err);
       const entry: ErrorLogEntry = {

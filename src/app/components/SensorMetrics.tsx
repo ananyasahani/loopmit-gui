@@ -9,8 +9,8 @@ export function SensorMetrics() {
     {
       //slave3
       label: 'Voltage (5V)',
-      value: sensorData.voltage,
-      displayValue: `${sensorData.master_voltage.toFixed(2)}V`,
+      value: sensorData.voltage3,
+      displayValue: `${sensorData.voltage3.toFixed(2)}V`,
       icon: <Battery className="size-6" />,
       color: 'text-blue-500',
       bgColor: 'bg-blue-500/10',
@@ -21,8 +21,8 @@ export function SensorMetrics() {
     {
       //safety
       label: 'Master Voltage (5V)',
-      value: sensorData.voltage,
-      displayValue: `${sensorData.master_voltage.toFixed(2)}V`,
+      value: sensorData.voltage1,
+      displayValue: `${sensorData.voltage1.toFixed(2)}V`,
       icon: <Battery className="size-6" />,
       color: 'text-blue-500',
       bgColor: 'bg-blue-500/10',
@@ -33,8 +33,8 @@ export function SensorMetrics() {
     {
       // slave2
       label: 'LV Battery (24V)',
-      value: sensorData.voltage,
-      displayValue: `${sensorData.voltage.toFixed(2)}V`,
+      value: sensorData.voltage2,
+      displayValue: `${sensorData.voltage2.toFixed(2)}V`,
       icon: <Battery className="size-6" />,
       color: 'text-blue-500',
       bgColor: 'bg-blue-500/10',
@@ -46,8 +46,8 @@ export function SensorMetrics() {
     
     {
       label: 'LV Battery (15V)',
-      value: sensorData.slave4_voltage,
-      displayValue: `${sensorData.slave4_voltage.toFixed(2)}V`,
+      value: sensorData.voltage3,
+      displayValue: `${sensorData.voltage3.toFixed(2)}V`,
       icon: <Battery className="size-6" />,
       color: 'text-blue-500',
       bgColor: 'bg-cyan-500/10',
@@ -56,9 +56,9 @@ export function SensorMetrics() {
       max: 20,
     },
     {
-      label: 'Gap Height',
-      value: sensorData.gapHeight,
-      displayValue: `${sensorData.gapHeight.toFixed(1)}mm`,
+      label: 'Gap Height (#slave 2)',
+      value: sensorData.gap_height,
+      displayValue: `${sensorData.gap_height.toFixed(1)}mm`,
       icon: <Gauge className="size-6" />,
       color: 'text-green-500',
       bgColor: 'bg-green-500/10',
@@ -67,9 +67,9 @@ export function SensorMetrics() {
       max: 7,
     },
     {
-      label: 'Gap Height-2',
-      value: sensorData.gapHeight2,
-      displayValue: `${sensorData.gapHeight2.toFixed(1)}mm`,
+      label: 'Gap Height (#slave 3)',
+      value: sensorData.gap_height2,
+      displayValue: `${sensorData.gap_height2.toFixed(1)}mm`,
       icon: <Gauge className="size-6" />,
       color: 'text-green-500',
       bgColor: 'bg-green-500/10',
@@ -102,7 +102,7 @@ export function SensorMetrics() {
     {
       label: 'Temperature (#slave2)',
       value: sensorData.acceleration.x,
-      displayValue: `${sensorData.temperatures[0].toFixed(3)}m/s²`,
+      displayValue: `${sensorData.temperatures[0].toFixed(3)}`,
       icon: <Thermometer className="size-6" />,
       color: 'text-yellow-500',
       bgColor: 'bg-yellow-500/10',
@@ -113,7 +113,7 @@ export function SensorMetrics() {
     {
       label: 'Temperature (#slave3)',
       value: sensorData.acceleration.x,
-      displayValue: `${sensorData.temperatures[1].toFixed(3)}m/s²`,
+      displayValue: `${sensorData.temperatures[1].toFixed(3)}`,
       icon: <Thermometer className="size-6" />,
       color: 'text-yellow-500',
       bgColor: 'bg-yellow-500/10',
@@ -124,7 +124,7 @@ export function SensorMetrics() {
     {
       label: 'Temperature (#slave4)',
       value: sensorData.acceleration.x,
-      displayValue: `${sensorData.temperatures[2].toFixed(3)}m/s²`,
+      displayValue: `${sensorData.temperatures[2].toFixed(3)}`,
       icon: <Thermometer className="size-6" />,
       color: 'text-yellow-500',
       bgColor: 'bg-yellow-500/10',
@@ -135,8 +135,8 @@ export function SensorMetrics() {
     
     {
       label: 'Pressure sensor from slave 4',
-      value: sensorData.slave4_pressure,
-      displayValue: `${sensorData.slave4_pressure.toFixed(1)}bar`,
+      value: sensorData.pressure,
+      displayValue: `${sensorData.pressure.toFixed(1)}bar`,
       icon: <Gauge className="size-6" />,
       color: 'text-orange-500',
       bgColor: 'bg-orange-500/10',

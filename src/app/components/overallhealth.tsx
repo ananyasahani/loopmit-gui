@@ -2,33 +2,54 @@ import React from 'react';
 import { useESP } from '../context/ESPContext';
 
 interface SensorData {
-  gapHeight: number;
-  gapHeight2: number;
-  objectTemp: number;
-  temperatures: number[];
-  voltage: number;
+  // IMU - Orientation
   orientation: { x: number; y: number; z: number };
-  acceleration: { x: number; y: number; z: number; magnitude: number };
+  object_temp: number;
   calibration: { gyro: number; sys: number; magneto: number };
+  
+  // IMU - Acceleration
+  acceleration: { x: number; y: number; z: number; magnitude: number };
+  
+  // IMU Health
   bno_health: number;
   icg_health: number;
-  voltage_health: number;
-  temp4_health: number;
+  
+  // LIDAR
+  gap_height: number;
   lidar_health: number;
+  gap_height2: number;
   lidar2_health: number;
+  
+  temperatures: number[];
+  temp1_health: number;
   temp2_health: number;
-  slave4_voltage: number;
-  slave4_voltage_health: number;
-  slave4_pressure: number;
-  slave4_pressure_health: number;
-  master_voltage: number;
-  master_voltage_health: number;
+  temp3_health: number;
+  
+  // Voltages
+  voltage1: number;
+  voltage1_health: number;
+  voltage2: number;
+  voltage2_health: number;
+  voltage3: number;
+  voltage3_health: number;
+  
+  // Pressure
+  pressure: number;
+  pressure_health: number;
+  
+  // System State
+  emergency_reason_mask: number;
+  
+  // Safety ESP
   wiring_health: number;
-  heartbeat_health: number;
-  safety_heartbeat_health: number;
   heartbeat_count: number;
   last_heartbeat_ms: number;
-  emergency_reason_mask: number;
+  
+  // Safety & Heartbeat
+  safety_heartbeat_health: number;
+  safety_hb_last_time: number;
+  timestamp: number;
+  safety_heartbeat_count: number;
 }
 
 const calculateOverallHealth = (data: SensorData | null): number => {
@@ -36,23 +57,27 @@ const calculateOverallHealth = (data: SensorData | null): number => {
     return 0;
   }
 
+  // Updated health weights matching the actual SensorData interface
   const healthWeights = {
     bno_health: 6,
     icg_health: 6,
-    voltage_health: 10,
-    temp4_health: 8,
     lidar_health: 7,
     lidar2_health: 7,
+    temp1_health: 8,
     temp2_health: 8,
-    slave4_voltage_health: 8,
-    slave4_pressure_health: 10,
-    master_voltage_health: 8,
+    temp3_health: 8,
+    voltage1_health: 10,
+    voltage2_health: 8,
+    voltage3_health: 8,
+    pressure_health: 10,
+    wiring_health: 9,
     safety_heartbeat_health: 10,
   };
 
+  // Critical systems that will cause overall health to be 0 if they fail
   const criticalSystems = [
-    'voltage_health',
-    'slave4_pressure_health',
+    'voltage1_health',
+    'pressure_health',
     'safety_heartbeat_health',
   ];
 
@@ -69,12 +94,22 @@ const calculateOverallHealth = (data: SensorData | null): number => {
 
   Object.entries(healthWeights).forEach(([key, weight]) => {
     const healthValue = data[key as keyof SensorData] as number;
-    totalWeightedScore += healthValue * weight;
-    totalWeight += weight;
+    // Only add to calculation if the value exists and is a valid number
+    if (healthValue !== undefined && !isNaN(healthValue)) {
+      totalWeightedScore += healthValue * weight;
+      totalWeight += weight;
+    }
   });
 
-  const weightedAverage = totalWeightedScore / totalWeight;
-  return (weightedAverage / 2) * 100;
+  // Prevent division by zero
+  if (totalWeight === 0) {
+    return 0;
+  }
+
+  const weightedAverage = (totalWeightedScore/2 )/ totalWeight;
+  
+  // Health values are 0 or 1, so multiply by 100 to get percentage
+  return weightedAverage * 100;
 };
 
 const getGradientColor = (percentage: number): string => {
@@ -97,9 +132,10 @@ const getGradientColor = (percentage: number): string => {
 };
 
 const HealthSlider = () => {
-  const SensorData  = useESP();
+  // ✅ FIX: Get sensorData from the context
+  const { sensorData } = useESP();
 
-  const healthPercentage = calculateOverallHealth(SensorData)
+  const healthPercentage = calculateOverallHealth(sensorData);
   const gradientColor = getGradientColor(healthPercentage);
 
   const getStatusText = (percentage: number): string => {
@@ -109,7 +145,7 @@ const HealthSlider = () => {
     return 'Critical';
   };
 
-  if (!SensorData) {
+  if (!sensorData) {
     return (
       <div className="w-full p-6 bg-gray-900 rounded-lg shadow-xl">
         <p className="text-white">No sensor data available</p>
@@ -191,6 +227,18 @@ const HealthSlider = () => {
           <span className="text-gray-400">Excellent</span>
         </div>
       </div>
+      
+      {/* Debug info - Remove this after testing */}
+      {/* <div className="mt-4 p-2 bg-gray-800 rounded text-xs text-gray-300">
+        <div>BNO: {sensorData.bno_health}</div>
+        <div>ICG: {sensorData.icg_health}</div>
+        <div>LIDAR1: {sensorData.lidar_health}</div>
+        <div>LIDAR2: {sensorData.lidar2_health}</div>
+        <div>Voltage1: {sensorData.voltage1_health}</div>
+        <div>Pressure: {sensorData.pressure_health}</div>
+        <div>Wiring: {sensorData.wiring_health}</div>
+        <div>Safety HB: {sensorData.safety_heartbeat_health}</div>
+      </div> */}
     </div>
   );
 };

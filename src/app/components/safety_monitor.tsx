@@ -37,7 +37,7 @@ const SafetyMonitor: React.FC = () => {
 
   const safetyData: SafetyData = {
     wiring_health: sensorData.wiring_health || 0,
-    heartbeat_health: sensorData.heartbeat_health || 0,
+    heartbeat_health: sensorData.safety_heartbeat_health || 0,
     safety_heartbeat_health: sensorData.safety_heartbeat_health || 0,
     heartbeat_count: sensorData.heartbeat_count || 0,
     last_heartbeat_ms: sensorData.last_heartbeat_ms || 0,
