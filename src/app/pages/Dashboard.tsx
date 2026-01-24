@@ -14,7 +14,7 @@ import HealthSlider from '../components/overallhealth';
 import { LogOut } from 'lucide-react';
 import { useClerk } from '@clerk/clerk-react';
 import SafetyMonitor from '../components/safety_monitor';
-// import Pod from '../components/Pod';
+import Pod from '../components/Pod';
 
 export function Dashboard() {
   const { isConnected ,sensorData} = useESP();

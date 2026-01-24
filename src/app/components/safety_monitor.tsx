@@ -5,6 +5,7 @@ import { AlertTriangle, Heart, Zap } from 'lucide-react';
 interface SafetyData {
   wiring_health: number;
   heartbeat_health: number;
+  master_heartbeat_health:number;
   safety_heartbeat_health: number;
   heartbeat_count: number;
   last_heartbeat_ms: number;
@@ -39,6 +40,7 @@ const SafetyMonitor: React.FC = () => {
     wiring_health: sensorData.wiring_health || 0,
     heartbeat_health: sensorData.safety_heartbeat_health || 0,
     safety_heartbeat_health: sensorData.safety_heartbeat_health || 0,
+    master_heartbeat_health:sensorData.master_heartbeat_health || 0,
     heartbeat_count: sensorData.heartbeat_count || 0,
     last_heartbeat_ms: sensorData.last_heartbeat_ms || 0,
   };
@@ -61,7 +63,7 @@ const SafetyMonitor: React.FC = () => {
               <span className="text-sm font-medium text-muted-foreground">Wiring Health</span>
             </div>
             <span className={`text-lg font-bold ${getHealthColor(safetyData.wiring_health)}`}>
-              {safetyData.wiring_health.toFixed(1)}%
+              {safetyData.wiring_health.toFixed(1)}
             </span>
           </div>
           <div className="w-full h-2 bg-background rounded-full overflow-hidden">
@@ -80,7 +82,7 @@ const SafetyMonitor: React.FC = () => {
               <span className="text-sm font-medium text-muted-foreground">Safety Heartbeat</span>
             </div>
             <span className={`text-lg font-bold ${getHealthColor(safetyData.safety_heartbeat_health)}`}>
-              {safetyData.safety_heartbeat_health.toFixed(1)}%
+              {safetyData.safety_heartbeat_health.toFixed(1)}
             </span>
           </div>
           <div className="w-full h-2 bg-background rounded-full overflow-hidden">
@@ -96,10 +98,10 @@ const SafetyMonitor: React.FC = () => {
           <div className="flex items-center justify-between mb-2">
             <div className="flex items-center gap-2">
               <Heart className={`size-4 ${getHealthColor(safetyData.heartbeat_health)}`} />
-              <span className="text-sm font-medium text-muted-foreground">Heartbeat</span>
+              <span className="text-sm font-medium text-muted-foreground">Safety Heartbeat health</span>
             </div>
             <span className={`text-lg font-bold ${getHealthColor(safetyData.heartbeat_health)}`}>
-              {safetyData.heartbeat_health.toFixed(1)}%
+              {safetyData.heartbeat_health.toFixed(1)}
             </span>
           </div>
           <div className="w-full h-2 bg-background rounded-full overflow-hidden">
@@ -109,6 +111,25 @@ const SafetyMonitor: React.FC = () => {
             />
           </div>
         </div>
+        {/* master heartbeat health*/}
+        <div className={`p-4 rounded-lg ${getHealthBgColor(safetyData.master_heartbeat_health)}`}>
+          <div className="flex items-center justify-between mb-2">
+            <div className="flex items-center gap-2">
+              <Heart className={`size-4 ${getHealthColor(safetyData.master_heartbeat_health)}`} />
+              <span className="text-sm font-medium text-muted-foreground">Master Heartbeat health</span>
+            </div>
+            <span className={`text-lg font-bold ${getHealthColor(safetyData.master_heartbeat_health)}`}>
+              {safetyData.master_heartbeat_health.toFixed(1)}
+            </span>
+          </div>
+          <div className="w-full h-2 bg-background rounded-full overflow-hidden">
+            <div
+              className={`h-full transition-all duration-300 ${safetyData.master_heartbeat_health >= 75 ? 'bg-green-500' : safetyData.master_heartbeat_health >= 50 ? 'bg-yellow-500' : safetyData.master_heartbeat_health >= 25 ? 'bg-orange-500' : 'bg-red-500'}`}
+              style={{ width: `${safetyData.master_heartbeat_health}%` }}
+            />
+          </div>
+        </div>
+        
 
         {/* Heartbeat Count */}
         <div className="p-4 rounded-lg bg-muted">

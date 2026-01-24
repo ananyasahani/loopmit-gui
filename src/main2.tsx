@@ -14,7 +14,7 @@ export default function MainPage() {
       <BrowserRouter>
       
         <div className="dark min-h-screen bg-background text-foreground">
-          <SideNavigation />
+          {/* <SideNavigation /> */}
           <Routes>
             <Route path="/" element={<Dashboard />} />
             <Route path="/electrical" element={<Electrical />} />

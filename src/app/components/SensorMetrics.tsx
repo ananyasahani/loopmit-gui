@@ -8,7 +8,7 @@ export function SensorMetrics() {
   const metrics = [
     {
       //slave3
-      label: 'Voltage (5V)',
+      label: 'Voltage (5V) slave 4',
       value: sensorData.voltage3,
       displayValue: `${sensorData.voltage3.toFixed(2)}V`,
       icon: <Battery className="size-6" />,
@@ -20,7 +20,7 @@ export function SensorMetrics() {
     },
     {
       //safety
-      label: 'Master Voltage (5V)',
+      label: 'Master Voltage (5V) slave 2',
       value: sensorData.voltage1,
       displayValue: `${sensorData.voltage1.toFixed(2)}V`,
       icon: <Battery className="size-6" />,
@@ -32,7 +32,7 @@ export function SensorMetrics() {
     },
     {
       // slave2
-      label: 'LV Battery (24V)',
+      label: 'LV Battery (24V) slave 3',
       value: sensorData.voltage2,
       displayValue: `${sensorData.voltage2.toFixed(2)}V`,
       icon: <Battery className="size-6" />,
@@ -50,8 +50,8 @@ export function SensorMetrics() {
       displayValue: `${sensorData.voltage3.toFixed(2)}V`,
       icon: <Battery className="size-6" />,
       color: 'text-blue-500',
-      bgColor: 'bg-cyan-500/10',
-      sliderColor: 'bg-cyan-500',
+      bgColor: 'bg-blue-500/10',
+      sliderColor: 'bg-blue-500',
       min: 0,
       max: 20,
     },
@@ -101,7 +101,7 @@ export function SensorMetrics() {
     },
     {
       label: 'Temperature (#slave2)',
-      value: sensorData.acceleration.x,
+      value: sensorData.temperatures[0],
       displayValue: `${sensorData.temperatures[0].toFixed(3)}`,
       icon: <Thermometer className="size-6" />,
       color: 'text-yellow-500',
@@ -112,7 +112,7 @@ export function SensorMetrics() {
     },
     {
       label: 'Temperature (#slave3)',
-      value: sensorData.acceleration.x,
+      value: sensorData.temperatures[1],
       displayValue: `${sensorData.temperatures[1].toFixed(3)}`,
       icon: <Thermometer className="size-6" />,
       color: 'text-yellow-500',
@@ -123,7 +123,7 @@ export function SensorMetrics() {
     },
     {
       label: 'Temperature (#slave4)',
-      value: sensorData.acceleration.x,
+      value: sensorData.temperatures[2],
       displayValue: `${sensorData.temperatures[2].toFixed(3)}`,
       icon: <Thermometer className="size-6" />,
       color: 'text-yellow-500',

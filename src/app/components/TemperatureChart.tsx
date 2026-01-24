@@ -142,7 +142,7 @@ export function TemperatureChart() {
                 <Line
                   key={`sensor-${index}`}
                   type="monotone"
-                  dataKey={`temp${index + 1}`}
+                  dataKey={`temp${index +1}`}
                   stroke={SENSOR_COLORS[index]}
                   strokeWidth={2}
                   dot={false}
@@ -154,7 +154,7 @@ export function TemperatureChart() {
         </ResponsiveContainer>
         
         {/* Temperature Threshold Slider */}
-        <div className="mt-4 border-t border-border pt-4">
+        {/* <div className="mt-4 border-t border-border pt-4">
           <Label className="text-sm text-muted-foreground mb-3 block">
             Temperature Threshold: {threshold}°C
           </Label>
@@ -166,13 +166,13 @@ export function TemperatureChart() {
             step={1}
             className="w-full"
           />
-        </div>
+        </div> */}
 
         {/* Sensor Selection Checkboxes */}
         <div className="mt-4 border-t border-border pt-4">
           <Label className="text-sm text-muted-foreground mb-3 block">Select Sensors to Display:</Label>
           <div className="grid grid-cols-2 gap-3">
-            {[0, 1, 2, 3].map((index) => (
+            {[0, 1, 2].map((index) => (
               <div key={index} className="flex items-center space-x-2">
                 <Checkbox
                   id={`sensor-${index}`}

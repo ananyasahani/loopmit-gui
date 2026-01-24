@@ -54,7 +54,7 @@ export function HealthScore() {
     },
     {
       label: 'LiDAR-2 Health',
-      value: sensorData.lidar_health,
+      value: sensorData.lidar2_health,
       icon: <Radio className="size-5" />,
       description: 'LiDAR Sensor Health',
     },

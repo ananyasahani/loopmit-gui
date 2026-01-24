@@ -31,7 +31,7 @@ export default function App() {
   // Finish loader then show main page
   useEffect(() => {
     if (loading) {
-      const totalDuration = loadingStates.length * 2000;
+      const totalDuration = loadingStates.length * 1000;
       const timer = setTimeout(() => {
         setLoading(false);
         setShowMain(true);

@@ -46,13 +46,14 @@ const SensorNode = ({ id, label, health, dataValues }: SensorNodeProps) => {
         onPointerOut={() => setHover(false)}
         onClick={() => console.log(`Clicked ${label}`)}
       >
-        <sphereGeometry args={[0.15, 32, 32]} />
+        <sphereGeometry args={[0.15, 32, 32]}  wireframe={true}/>
         {/* Emissive material + ToneMapped=false allows the Bloom effect to pick this up */}
         <meshStandardMaterial 
           color={color} 
-          emissive={color}
-          emissiveIntensity={hovered ? 4 : 2} 
-          toneMapped={false}
+          // emissive={color}
+          // emissiveIntensity={hovered ? 4 : 2} 
+          // toneMapped={false}
+         
         />
       </mesh>
 

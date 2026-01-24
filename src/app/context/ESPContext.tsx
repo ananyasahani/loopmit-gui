@@ -164,11 +164,15 @@ interface SensorData {
   last_heartbeat_ms:number;
   
   
-  // Safety & Heartbeat
+  // master-to-pilot
   safety_heartbeat_health: number;
   safety_hb_last_time: number;
   timestamp: number;
   safety_heartbeat_count: number;
+  //safety-to-pilot
+  master_heartbeat_health:number;
+  heartbeat_health:number;
+
 
 
   //state info
@@ -438,13 +442,17 @@ class DataParser {
       if (rawData.heartbeat_count !== undefined) {
         result.heartbeat_count = rawData.heartbeat_count;
       }
-      if (rawData.last_heartbeat_ms !== undefined) {
+      if (rawData.last_heartbeat_ms !== undefined){
         result.last_heartbeat_ms = rawData.last_heartbeat_ms;
       }
   
       // Safety & Heartbeat
       if (rawData.safety_heartbeat_health !== undefined) {
         result.safety_heartbeat_health = rawData.safety_heartbeat_health;
+      }
+
+      if (rawData.master_heartbeat_health !== undefined) {
+        result.master_heartbeat_health = rawData.master_heartbeat_health;
       }
       if (rawData.safety_hb_last_time !== undefined) {
         result.safety_hb_last_time = rawData.safety_hb_last_time;
@@ -689,6 +697,9 @@ export const ESPProvider: React.FC<{ children: React.ReactNode }> = ({ children 
 
     //current state info
     current_state:"",
+    //safety
+    master_heartbeat_health:0,
+    heartbeat_health:0,
   });
   
   // Track which errors have already been logged to prevent duplicates
