@@ -156,5 +156,3 @@ Components from [shadcn/ui](https://ui.shadcn.com/) used under [MIT license](htt
 Photos from [Unsplash](https://unsplash.com) used under [license](https://unsplash.com/license).
 
 ---
-
-**Note for Recruiters**: This project showcases modern web development practices, hardware integration skills, and the ability to create production-ready IoT applications. The codebase demonstrates proficiency in React ecosystem, TypeScript, real-time data handling, and browser APIs.
