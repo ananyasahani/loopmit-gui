@@ -1,36 +1,147 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# ESPContext - Real-Time IoT Sensor Dashboard
 
-## Getting Started
+A modern web-based dashboard for monitoring and controlling ESP8266-connected sensors and relays in real-time using the Web Serial API.
 
-First, run the development server:
+## 🎯 Project Goals
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+This project demonstrates:
+
+- **Real-Time IoT Communication**: Seamless bidirectional communication between web applications and hardware devices using the Web Serial API
+- **Complex State Management**: Efficient handling of multiple sensor streams, historical data, and device states in a React application
+- **Modern Web Architecture**: Implementation of context-based state management patterns for scalable IoT applications
+- **Data Visualization**: Real-time charting and monitoring of temperature, voltage, and positioning sensors
+- **Hardware Integration**: Direct browser-to-device communication without backend infrastructure requirements
+
+## 🛠️ Technologies Used
+
+### Frontend
+- **React** - Component-based UI architecture
+- **TypeScript** - Type-safe development
+- **React Context API** - Global state management
+- **shadcn/ui** - Modern UI component library
+- **Recharts** - Data visualization and real-time charting
+
+### Hardware Integration
+- **Web Serial API** - Direct browser-to-device communication
+- **ESP8266** - Microcontroller platform
+- **JSON Protocol** - Structured data exchange format
+
+### Development Tools
+- **Vite** - Fast build tooling and development server
+- **Mermaid** - System architecture documentation
+
+## 📊 System Architecture
+
+The application follows a modular architecture with clear separation of concerns:
+
+### Core Components
+
+1. **ESPProvider** - Central state management and coordination layer
+2. **SerialPortManager** - Web Serial API abstraction and data streaming
+3. **DataParser** - JSON parsing and sensor data extraction
+4. **HistoryManager** - Time-series data management with automatic cleanup
+5. **RelayController** - Device control command interface
+
+### Key Features
+
+- **Multi-Sensor Support**: Monitors up to 4 temperature sensors simultaneously
+- **Historical Data Tracking**: Maintains time-windowed history for temperature, gap height, and voltage readings
+- **Relay Control**: Toggle individual relays or control all relays at once
+- **Automatic Reconnection**: Robust error handling and connection management
+- **Real-Time Updates**: Live sensor data streaming with configurable update rates
+
+## 🔄 Data Flow
+
+```
+ESP8266 Device → Serial Port → SerialPortManager → ESPProvider
+                                                        ↓
+                                                   DataParser
+                                                        ↓
+                                                HistoryManager
+                                                        ↓
+                                              UI Components
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## 📡 Supported Sensors & Data
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+- **Temperature Sensors**: Multi-point temperature monitoring (MLX90614)
+- **Gap Height Sensor**: Positioning data via ultrasonic measurement
+- **Voltage Monitoring**: Real-time voltage tracking
+- **Orientation**: 3-axis orientation data (pitch, roll, yaw)
+- **Acceleration**: 3-axis accelerometer readings
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## 🎮 Relay Control
 
-## Learn More
+- Individual relay toggle (4 independent channels)
+- Bulk operations (All On/All Off)
+- Real-time state feedback
+- Command acknowledgment system
 
-To learn more about Next.js, take a look at the following resources:
+## 📈 Performance Optimizations
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+- **Efficient Buffer Management**: Streaming data buffering with line-based parsing
+- **History Cleanup**: Automatic time-window filtering and point limiting
+- **State Batching**: Optimized React state updates to minimize re-renders
+- **Memory Management**: Configurable history limits to prevent memory leaks
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## 🔒 Browser Compatibility
 
-## Deploy on Vercel
+This application requires a browser with Web Serial API support:
+- Chrome 89+
+- Edge 89+
+- Opera 75+
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## 📚 Documentation
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Comprehensive system diagrams are available in `ESPContext_Diagrams.md`, including:
+
+- Sequence diagrams for connection, data flow, and relay control
+- State diagrams showing system lifecycle
+- Class diagrams illustrating component relationships
+- Temperature data processing workflows
+
+## 🚀 Getting Started
+
+```bash
+# Install dependencies
+npm install
+
+# Start development server
+npm run dev
+
+# Build for production
+npm run build
+```
+
+## 🔌 Hardware Setup
+
+The system communicates with ESP8266 devices at 115200 baud rate using a simple text-based protocol:
+
+**Commands:**
+- `STATUS` - Request current relay states
+- `RELAY{n}_ON` - Turn on relay n (1-4)
+- `RELAY{n}_OFF` - Turn off relay n (1-4)
+- `ALL_ON` - Activate all relays
+- `ALL_OFF` - Deactivate all relays
+
+**Data Format:**
+- JSON objects for sensor data
+- Plain text for relay state responses
+
+## 💡 Key Technical Achievements
+
+- **Zero-Backend Architecture**: Direct browser-to-hardware communication eliminates server requirements
+- **Scalable State Management**: Context-based architecture supports easy feature expansion
+- **Type Safety**: Full TypeScript implementation prevents runtime errors
+- **Modular Design**: Clean separation enables independent component testing and maintenance
+- **Real-Time Performance**: Sub-second data updates with efficient rendering
+
+## 📄 License
+
+Components from [shadcn/ui](https://ui.shadcn.com/) used under [MIT license](https://github.com/shadcn-ui/ui/blob/main/LICENSE.md).
+
+Photos from [Unsplash](https://unsplash.com) used under [license](https://unsplash.com/license).
+
+---
+
+**Note for Recruiters**: This project showcases modern web development practices, hardware integration skills, and the ability to create production-ready IoT applications. The codebase demonstrates proficiency in React ecosystem, TypeScript, real-time data handling, and browser APIs.
