@@ -5,15 +5,14 @@ A modern web-based dashboard for monitoring and controlling ESP8266-connected se
 ## 📸 Screenshots
 
 ### System Overview
-![loopMIT Control Center - System Health Dashboard](./Screenshot_2026-01-22_200358.png)
-*Main control center showing system health, connection status, and emergency controls*
+![loopMIT Control Center - System Health Dashboard](./Screenshot%202026-01-22%20200358.png)
 
 ### Multi-Sensor Monitoring
-![Sensor Grid - Voltage, Gap Height, Acceleration, and Orientation](./Screenshot_2026-01-22_200455.png)
+![Sensor Grid - Voltage, Gap Height, Acceleration, and Orientation](./Screenshot%202026-01-22%20200455.png)
 *Real-time monitoring of voltage levels, gap height sensors, acceleration data, orientation, temperature sensors, and pressure readings*
 
 ### Temperature Analytics
-![Temperature Monitoring with Multi-Sensor Display](./Screenshot_2026-01-22_201334.png)
+![Temperature Monitoring with Multi-Sensor Display](./Screenshot%202026-01-22%20201334.png)
 *Live temperature tracking across 4 sensors with configurable threshold alerts and historical data visualization*
 
 ## 🎯 Project Goals
