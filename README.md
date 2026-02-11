@@ -2,6 +2,20 @@
 
 A modern web-based dashboard for monitoring and controlling ESP8266-connected sensors and relays in real-time using the Web Serial API.
 
+## 📸 Screenshots
+
+### System Overview
+![loopMIT Control Center - System Health Dashboard](./Screenshot_2026-01-22_200358.png)
+*Main control center showing system health, connection status, and emergency controls*
+
+### Multi-Sensor Monitoring
+![Sensor Grid - Voltage, Gap Height, Acceleration, and Orientation](./Screenshot_2026-01-22_200455.png)
+*Real-time monitoring of voltage levels, gap height sensors, acceleration data, orientation, temperature sensors, and pressure readings*
+
+### Temperature Analytics
+![Temperature Monitoring with Multi-Sensor Display](./Screenshot_2026-01-22_201334.png)
+*Live temperature tracking across 4 sensors with configurable threshold alerts and historical data visualization*
+
 ## 🎯 Project Goals
 
 This project demonstrates:
@@ -141,6 +155,13 @@ The system communicates with ESP8266 devices at 115200 baud rate using a simple 
 Components from [shadcn/ui](https://ui.shadcn.com/) used under [MIT license](https://github.com/shadcn-ui/ui/blob/main/LICENSE.md).
 
 Photos from [Unsplash](https://unsplash.com) used under [license](https://unsplash.com/license).
+
+## 📁 Repository Structure
+
+To display screenshots properly, create a `screenshots` folder in your repository root and add the following images:
+- `Screenshot_2026-01-22_200358.png` - System health dashboard
+- `Screenshot_2026-01-22_200455.png` - Multi-sensor monitoring grid
+- `Screenshot_2026-01-22_201334.png` - Temperature analytics view
 
 ---
 
