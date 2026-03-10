@@ -2,7 +2,7 @@
 
 A modern web-based dashboard for monitoring and controlling ESP8266-connected sensors and relays in real-time using the Web Serial API.
 
-## 📸 Screenshots
+## Screenshots
 
 ### System Overview
 ![loopMIT Control Center - System Health Dashboard](./Screenshot%202026-01-22%20200358.png)
@@ -15,7 +15,7 @@ A modern web-based dashboard for monitoring and controlling ESP8266-connected se
 ![Temperature Monitoring with Multi-Sensor Display](./Screenshot%202026-01-22%20201334.png)
 *Live temperature tracking across 4 sensors with configurable threshold alerts and historical data visualization*
 
-## 🎯 Project Goals
+## Project Goals
 
 This project demonstrates:
 
@@ -25,7 +25,7 @@ This project demonstrates:
 - **Data Visualization**: Real-time charting and monitoring of temperature, voltage, and positioning sensors
 - **Hardware Integration**: Direct browser-to-device communication without backend infrastructure requirements
 
-## 🛠️ Technologies Used
+## Technologies Used
 
 ### Frontend
 - **React** - Component-based UI architecture
@@ -43,7 +43,7 @@ This project demonstrates:
 - **Vite** - Fast build tooling and development server
 - **Mermaid** - System architecture documentation
 
-## 📊 System Architecture
+## System Architecture
 
 The application follows a modular architecture with clear separation of concerns:
 
@@ -63,7 +63,7 @@ The application follows a modular architecture with clear separation of concerns
 - **Automatic Reconnection**: Robust error handling and connection management
 - **Real-Time Updates**: Live sensor data streaming with configurable update rates
 
-## 🔄 Data Flow
+## Data Flow
 
 ```
 ESP8266 Device → Serial Port → SerialPortManager → ESPProvider
@@ -75,7 +75,7 @@ ESP8266 Device → Serial Port → SerialPortManager → ESPProvider
                                               UI Components
 ```
 
-## 📡 Supported Sensors & Data
+## Supported Sensors & Data
 
 - **Temperature Sensors**: Multi-point temperature monitoring (MLX90614)
 - **Gap Height Sensor**: Positioning data via ultrasonic measurement
@@ -83,28 +83,28 @@ ESP8266 Device → Serial Port → SerialPortManager → ESPProvider
 - **Orientation**: 3-axis orientation data (pitch, roll, yaw)
 - **Acceleration**: 3-axis accelerometer readings
 
-## 🎮 Relay Control
+## Relay Control
 
 - Individual relay toggle (4 independent channels)
 - Bulk operations (All On/All Off)
 - Real-time state feedback
 - Command acknowledgment system
 
-## 📈 Performance Optimizations
+## Performance Optimizations
 
 - **Efficient Buffer Management**: Streaming data buffering with line-based parsing
 - **History Cleanup**: Automatic time-window filtering and point limiting
 - **State Batching**: Optimized React state updates to minimize re-renders
 - **Memory Management**: Configurable history limits to prevent memory leaks
 
-## 🔒 Browser Compatibility
+## Browser Compatibility
 
 This application requires a browser with Web Serial API support:
 - Chrome 89+
 - Edge 89+
 - Opera 75+
 
-## 📚 Documentation
+## Documentation
 
 Comprehensive system diagrams are available in `ESPContext_Diagrams.md`, including:
 
@@ -113,7 +113,7 @@ Comprehensive system diagrams are available in `ESPContext_Diagrams.md`, includi
 - Class diagrams illustrating component relationships
 - Temperature data processing workflows
 
-## 🚀 Getting Started
+## Getting Started
 
 ```bash
 # Install dependencies
@@ -126,7 +126,7 @@ npm run dev
 npm run build
 ```
 
-## 🔌 Hardware Setup
+## Hardware Setup
 
 The system communicates with ESP8266 devices at 115200 baud rate using a simple text-based protocol:
 
@@ -141,7 +141,7 @@ The system communicates with ESP8266 devices at 115200 baud rate using a simple 
 - JSON objects for sensor data
 - Plain text for relay state responses
 
-## 💡 Key Technical Achievements
+## Key Technical Achievements
 
 - **Zero-Backend Architecture**: Direct browser-to-hardware communication eliminates server requirements
 - **Scalable State Management**: Context-based architecture supports easy feature expansion
@@ -149,10 +149,8 @@ The system communicates with ESP8266 devices at 115200 baud rate using a simple 
 - **Modular Design**: Clean separation enables independent component testing and maintenance
 - **Real-Time Performance**: Sub-second data updates with efficient rendering
 
-## 📄 License
+## License
 
 Components from [shadcn/ui](https://ui.shadcn.com/) used under [MIT license](https://github.com/shadcn-ui/ui/blob/main/LICENSE.md).
-
-Photos from [Unsplash](https://unsplash.com) used under [license](https://unsplash.com/license).
 
 ---
