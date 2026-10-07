@@ -1,0 +1,7 @@
+# Track large binary files with Git LFS
+*.node filter=lfs diff=lfs merge=lfs -text
+*.stl filter=lfs diff=lfs merge=lfs -text
+*.STL filter=lfs diff=lfs merge=lfs -text
+
+# Large files in node_modules
+node_modules/**/*.node filter=lfs diff=lfs merge=lfs -text
