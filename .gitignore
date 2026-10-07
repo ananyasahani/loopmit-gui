@@ -1,8 +1,53 @@
-# node_modules/ - commented out to include in repo
-# *.stl - tracked via Git LFS
-# *.STL - tracked via Git LFS
-# Large binary files
-# public/**/*.stl - tracked via Git LFS
-# public/**/*.STL - tracked via Git LFS
-# next-swc.*.node - tracked via Git LFS
+# Dependencies
+node_modules/
+# Stray duplicate copied in from a macOS machine - never commit this
+node modules/
+.pnp
+.pnp.js
 
+# Build output
+dist/
+dist-ssr/
+build/
+*.local
+
+# Vite / tooling caches
+.vite/
+.vite-temp/
+.cache/
+*.tsbuildinfo
+
+# Environment overrides
+# NOTE: .env itself is intentionally tracked (Clerk publishable key only).
+.env.local
+.env.*.local
+.env.development.local
+.env.production.local
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# OS cruft
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Editors
+.vscode/*
+!.vscode/extensions.json
+.idea/
+*.swp
+*.swo
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
